@@ -1,6 +1,6 @@
 # SSDP Browser (macOS)
 
-This is a macOS program for browsing SSDP or UPnP devices that are announced on the local network.
+This is a macOS program for finding UPnP devices that are announced on the local network via SSDP.
 
 It looks on *all* interfaces, not just only on the default interface. Which means that it will find devices that are on a secondary subnet, for instance.
 
