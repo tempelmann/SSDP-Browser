@@ -12,3 +12,5 @@ The source includes the following 3rd party sources:
 - SSDPClient (MIT License), updated to support multiple interfaces.
 
 It was tested on macOS 10.13, built with Xcode 10.1
+
+![Main Window with Search exampled](Docs/MainWindow.png)
