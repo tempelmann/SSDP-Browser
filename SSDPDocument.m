@@ -100,7 +100,15 @@
 	}
 	TreeNode *node = [self makeTreeNodeFrom:data withName:name];
 	node.value = uuid;
-	self.model.children = [self.model.children arrayByAddingObject:node];
+	NSMutableArray *existing = self.model.children.mutableCopy;
+	for (TreeNode *child in existing) {	// remove existing entry in order to avoid duplicates when we repeat discovery
+		if ([child.name isEqualToString:node.name] && [child.value isEqualToString:node.value]) {
+			[existing removeObject:child];
+			break;
+		}
+	}
+	[existing addObject:node];
+	self.model.children = existing;
 }
 
 - (void)discoveryDidFinish { 
