@@ -8,8 +8,9 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SSDPDocument">
             <connections>
+                <outlet property="outlineView" destination="RUc-0R-fhj" id="435-Y5-Z0a"/>
+                <outlet property="searchField" destination="arg-Uw-iSr" id="Vny-Cm-lM3"/>
                 <outlet property="searchSpinner" destination="vRf-2M-lY6" id="97l-Ml-HLn"/>
-                <outlet property="tableView" destination="RUc-0R-fhj" id="435-Y5-Z0a"/>
                 <outlet property="treeController" destination="nYg-cS-kk7" id="3tF-sE-2Mz"/>
                 <outlet property="window" destination="xOd-HO-29H" id="6ve-gK-dfk"/>
             </connections>
@@ -31,9 +32,6 @@
                         <buttonCell key="cell" type="push" title="Discover" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="QxQ-ld-bot">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
-                            <string key="keyEquivalent" base64-UTF8="YES">
-DQ
-</string>
                         </buttonCell>
                         <connections>
                             <action selector="startDiscovery:" target="-2" id="5pN-2y-yfj"/>
@@ -64,17 +62,17 @@ DQ
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" title="Text Cell" id="T80-hO-NYm">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" title="Text Cell" id="T80-hO-NYm" customClass="HighlightingTextFieldCell">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
-                                                <binding destination="nYg-cS-kk7" name="value" keyPath="arrangedObjects.name" id="VLt-Lt-UCX">
+                                                <binding destination="nYg-cS-kk7" name="value" keyPath="arrangedObjects.objectRef" id="4JE-oi-HRi">
                                                     <dictionary key="options">
                                                         <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSConditionallySetsEditable" value="NO"/>
+                                                        <bool key="NSConditionallySetsEditable" value="YES"/>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -85,17 +83,17 @@ DQ
                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" title="Text Cell" id="vVw-E8-K7X">
+                                            <textFieldCell key="dataCell" lineBreakMode="truncatingMiddle" selectable="YES" editable="YES" tag="1" title="Text Cell" id="vVw-E8-K7X" customClass="HighlightingTextFieldCell">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                             <connections>
-                                                <binding destination="nYg-cS-kk7" name="value" keyPath="arrangedObjects.value" id="HBW-3y-KBW">
+                                                <binding destination="nYg-cS-kk7" name="value" keyPath="arrangedObjects.objectRef" id="inb-Hn-OEX">
                                                     <dictionary key="options">
                                                         <bool key="NSAllowsEditingMultipleValuesSelection" value="NO"/>
-                                                        <bool key="NSConditionallySetsEditable" value="NO"/>
+                                                        <bool key="NSConditionallySetsEditable" value="YES"/>
                                                     </dictionary>
                                                 </binding>
                                             </connections>
@@ -120,8 +118,25 @@ DQ
                     <progressIndicator hidden="YES" wantsLayer="YES" focusRingType="none" horizontalHuggingPriority="750" verticalHuggingPriority="750" displayedWhenStopped="NO" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="vRf-2M-lY6">
                         <rect key="frame" x="97" y="387" width="16" height="16"/>
                     </progressIndicator>
+                    <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="arg-Uw-iSr">
+                        <rect key="frame" x="339" y="383" width="160" height="22"/>
+                        <constraints>
+                            <constraint firstAttribute="width" priority="700" constant="160" id="aEg-HW-viQ"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="ad8-cC-bW8"/>
+                        </constraints>
+                        <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" sendsSearchStringImmediately="YES" maximumRecents="20" id="goh-iI-2Ra">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </searchFieldCell>
+                        <connections>
+                            <action selector="filterUpdate:" target="-2" id="3D9-r1-Ibw"/>
+                            <outlet property="delegate" destination="-2" id="eB5-rq-Ysp"/>
+                        </connections>
+                    </searchField>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="trailing" secondItem="arg-Uw-iSr" secondAttribute="trailing" constant="8" id="2im-ft-Abo"/>
                     <constraint firstItem="BJq-94-XBn" firstAttribute="top" secondItem="gIp-Ho-8D9" secondAttribute="top" constant="8" id="4Xc-hO-48j"/>
                     <constraint firstAttribute="bottom" secondItem="dJS-qc-ia3" secondAttribute="bottom" id="5rV-L2-5WC"/>
                     <constraint firstItem="dJS-qc-ia3" firstAttribute="leading" secondItem="gIp-Ho-8D9" secondAttribute="leading" id="IPK-KU-s6T"/>
@@ -130,7 +145,8 @@ DQ
                     <constraint firstItem="vRf-2M-lY6" firstAttribute="leading" secondItem="BJq-94-XBn" secondAttribute="trailing" constant="8" id="Me2-h8-vG9"/>
                     <constraint firstItem="BJq-94-XBn" firstAttribute="leading" secondItem="gIp-Ho-8D9" secondAttribute="leading" constant="8" id="SPb-7y-d75"/>
                     <constraint firstItem="dJS-qc-ia3" firstAttribute="top" secondItem="BJq-94-XBn" secondAttribute="bottom" constant="8" id="bP8-PK-rsV"/>
-                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vRf-2M-lY6" secondAttribute="trailing" constant="20" id="ntE-Fm-KBl"/>
+                    <constraint firstItem="arg-Uw-iSr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vRf-2M-lY6" secondAttribute="trailing" constant="20" id="hM6-mX-VKx"/>
+                    <constraint firstItem="arg-Uw-iSr" firstAttribute="top" secondItem="BJq-94-XBn" secondAttribute="top" id="j1L-9o-7tM"/>
                 </constraints>
             </view>
             <connections>
@@ -138,12 +154,12 @@ DQ
             </connections>
             <point key="canvasLocation" x="139.5" y="146.5"/>
         </window>
-        <treeController editable="NO" childrenKeyPath="children" countKeyPath="count" leafKeyPath="isLeaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="nYg-cS-kk7">
+        <treeController objectClassName="TreeNode" editable="NO" childrenKeyPath="filteredChildren" countKeyPath="count" leafKeyPath="isLeaf" avoidsEmptySelection="NO" selectsInsertedObjects="NO" id="nYg-cS-kk7">
             <connections>
-                <binding destination="-2" name="contentArray" keyPath="model" id="z8U-Gd-KHk">
+                <binding destination="-2" name="contentArray" keyPath="model.filteredChildren" id="aE4-yh-Guu">
                     <dictionary key="options">
+                        <bool key="NSAlwaysPresentsApplicationModalAlerts" value="YES"/>
                         <bool key="NSConditionallySetsEditable" value="NO"/>
-                        <bool key="NSValidatesImmediately" value="YES"/>
                     </dictionary>
                 </binding>
             </connections>

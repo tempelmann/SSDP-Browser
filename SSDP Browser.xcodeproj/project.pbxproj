@@ -21,6 +21,9 @@
 		A4FEAA822B8E369D00FD51D6 /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */; };
 		A4FEAA832B8E369D00FD51D6 /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA82B7D44B5003F8770 /* SocketUtils.swift */; };
 		A4FEAA8F2B8E8BA600FD51D6 /* SSDPBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */; };
+		A4FEAA962B8E90E300FD51D6 /* PredicateOutlineNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA952B8E90E300FD51D6 /* PredicateOutlineNode.m */; };
+		A4FEAA9F2B8E95F200FD51D6 /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA9E2B8E95F200FD51D6 /* TreeNode.m */; };
+		A4FEAAA82B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAAA72B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +51,12 @@
 		A4FEAA732B8E34A000FD51D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A4FEAA752B8E34A000FD51D6 /* SSDP_Browser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SSDP_Browser.entitlements; sourceTree = "<group>"; };
 		A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDPBrowser.swift; sourceTree = "<group>"; };
+		A4FEAA942B8E90E300FD51D6 /* PredicateOutlineNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PredicateOutlineNode.h; sourceTree = "<group>"; };
+		A4FEAA952B8E90E300FD51D6 /* PredicateOutlineNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PredicateOutlineNode.m; sourceTree = "<group>"; };
+		A4FEAA9D2B8E95F200FD51D6 /* TreeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
+		A4FEAA9E2B8E95F200FD51D6 /* TreeNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TreeNode.m; sourceTree = "<group>"; };
+		A4FEAAA62B8EAB8B00FD51D6 /* HighlightingTextFieldCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HighlightingTextFieldCell.h; sourceTree = "<group>"; };
+		A4FEAAA72B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HighlightingTextFieldCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,10 +75,16 @@
 			children = (
 				A4FEAA642B8E349F00FD51D6 /* AppDelegate.h */,
 				A4FEAA652B8E349F00FD51D6 /* AppDelegate.m */,
+				A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */,
 				A4FEAA672B8E349F00FD51D6 /* SSDPDocument.h */,
 				A4FEAA682B8E349F00FD51D6 /* SSDPDocument.m */,
 				A4FEAA6A2B8E349F00FD51D6 /* SSDPDocument.xib */,
-				A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */,
+				A4FEAA942B8E90E300FD51D6 /* PredicateOutlineNode.h */,
+				A4FEAA952B8E90E300FD51D6 /* PredicateOutlineNode.m */,
+				A4FEAA9D2B8E95F200FD51D6 /* TreeNode.h */,
+				A4FEAA9E2B8E95F200FD51D6 /* TreeNode.m */,
+				A4FEAAA62B8EAB8B00FD51D6 /* HighlightingTextFieldCell.h */,
+				A4FEAAA72B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m */,
 				A4051FB02B7D44F9003F8770 /* SSDPClient (3rd party) */,
 				A4051FA22B7D44B5003F8770 /* Socket (3rd party) */,
 				A4FEAA632B8E349F00FD51D6 /* Resources */,
@@ -213,11 +228,14 @@
 				A4FEAA7D2B8E369400FD51D6 /* SSDPDiscovery.swift in Sources */,
 				A4FEAA7F2B8E369D00FD51D6 /* Socket+Equatable.swift in Sources */,
 				A4FEAA822B8E369D00FD51D6 /* SocketProtocols.swift in Sources */,
+				A4FEAAA82B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m in Sources */,
 				A4FEAA802B8E369D00FD51D6 /* Socket+Hashable.swift in Sources */,
 				A4FEAA812B8E369D00FD51D6 /* Socket.swift in Sources */,
 				A4FEAA7E2B8E369400FD51D6 /* SSDPService.swift in Sources */,
 				A4FEAA742B8E34A000FD51D6 /* main.m in Sources */,
+				A4FEAA962B8E90E300FD51D6 /* PredicateOutlineNode.m in Sources */,
 				A4FEAA662B8E349F00FD51D6 /* AppDelegate.m in Sources */,
+				A4FEAA9F2B8E95F200FD51D6 /* TreeNode.m in Sources */,
 				A4FEAA692B8E349F00FD51D6 /* SSDPDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
