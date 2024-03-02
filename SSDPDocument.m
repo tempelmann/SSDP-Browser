@@ -93,22 +93,60 @@
 	return result;
 }
 
-- (void)discoveryDidFindWithUuid:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data {
+- (TreeNode* _Nullable) findTreeNodeIn:(TreeNode* _Nonnull)parent match:(BOOL(^)(TreeNode* _Nonnull child))match {
+	for (TreeNode *child in parent.children) {
+		if (match(child)) {
+			return child;
+		}
+	}
+	return nil;
+}
+
+- (void)discoveryDidFindWithUuid:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data
+{
 	// 	NSLog(@"add %@", uuid);
+
 	if (data.count == 1 && data[@"root"] != nil) {	// replace the top "root" element with its single child element
 		data = data[@"root"];
 	}
-	TreeNode *node = [self makeTreeNodeFrom:data withName:name];
-	node.value = uuid;
-	NSMutableArray *existing = self.model.children.mutableCopy;
-	for (TreeNode *child in existing) {	// remove existing entry in order to avoid duplicates when we repeat discovery
-		if ([child.name isEqualToString:node.name] && [child.value isEqualToString:node.value]) {
-			[existing removeObject:child];
-			break;
+	
+	// Create the new node
+	TreeNode *newNode = [self makeTreeNodeFrom:data withName:name];
+	newNode.value = uuid;
+	
+	TreeNode *root = self.model;
+	TreeNode *parent = root;	// the default parent is the root node
+
+	// If we have multiple entries with the same name (but different uuid), we collect them all as children under a new intermediate node
+	TreeNode *match = [self findTreeNodeIn:root match:^BOOL(TreeNode * _Nonnull child) { return [child.name isEqualToString:newNode.name]; }];
+	if (match) {
+		BOOL isInsertedNode = match.value.length == 0;	// the added parent node gets no value
+		if (isInsertedNode) {
+			// The intermediate node becomes the new destination where the new node gets added
+			parent = match;
+		} else {
+			// We had only a single item with this name, now we have two -> merge them under a new intermediate node that we insert at the root
+			TreeNode *newParent = TreeNode.new;
+			newParent.name = match.name;
+			NSMutableArray *children = parent.children.mutableCopy;
+			[children removeObject:match];
+			[children addObject:newParent];
+			parent.children = children;
+			newParent.children = @[match];
+			parent = newParent;
 		}
 	}
-	[existing addObject:node];
-	self.model.children = existing;
+
+	// Avoid duplicating entries with the same name and uuid
+	match = [self findTreeNodeIn:parent match:^BOOL(TreeNode * _Nonnull child) {
+		return [child.name isEqualToString:newNode.name] && [child.value isEqualToString:newNode.value];
+	}];
+	NSMutableArray *newChildren = parent.children.mutableCopy;
+	if (match) {
+		[newChildren removeObject:match];
+	}
+	[newChildren addObject:newNode];
+	parent.children = newChildren;	// The assignment triggers a reload in the OutlineView via its NSTreeController
 }
 
 - (void)discoveryDidFinish { 
