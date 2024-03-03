@@ -22,7 +22,7 @@ public class SSDPBrowser: NSObject, DiscoveryDelegate
 
 	public func discoveryDidFind(uuid: String, name: String, data: NSDictionary) {
 		print ("Found \(name)")
-		if name.localizedCaseInsensitiveContains("Fritz") { return }
+		//if name.localizedCaseInsensitiveContains("Fritz") { return }
 		//self.textView.string.append("Found \(name)\n")
 		//self.textView.string.append("Found \(name): \(data)\n\n")
 	}
@@ -51,7 +51,8 @@ public class SSDPBrowser: NSObject, DiscoveryDelegate
 					var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
 					if (getnameinfo(ptr.pointee.ifa_addr, socklen_t(addr.sa_len), &hostname, socklen_t(hostname.count), nil, socklen_t(0), NI_NUMERICHOST) == 0) {
 						let address = String(cString: hostname)
-						// removing the %… suffix from IPv6 won't help: let address = String(address.split(separator: "%", maxSplits: 1, omittingEmptySubsequences: true).first ?? "")
+						// removing the %… suffix from IPv6 doesn't seem to make a difference:
+						//	address = String(address.split(separator: "%", maxSplits: 1, omittingEmptySubsequences: true).first ?? "")
 						addresses.append(address)
 					}
 				}
