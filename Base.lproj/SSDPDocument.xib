@@ -134,18 +134,29 @@
                             <outlet property="delegate" destination="-2" id="eB5-rq-Ysp"/>
                         </connections>
                     </searchField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4LA-dg-cUr">
+                        <rect key="frame" x="208" y="387" width="91" height="17"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="SSDP Browser" id="E9C-11-hv2">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="arg-Uw-iSr" secondAttribute="trailing" constant="8" id="2im-ft-Abo"/>
                     <constraint firstItem="BJq-94-XBn" firstAttribute="top" secondItem="gIp-Ho-8D9" secondAttribute="top" constant="8" id="4Xc-hO-48j"/>
                     <constraint firstAttribute="bottom" secondItem="dJS-qc-ia3" secondAttribute="bottom" id="5rV-L2-5WC"/>
+                    <constraint firstItem="4LA-dg-cUr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vRf-2M-lY6" secondAttribute="trailing" constant="20" id="7ZS-2z-idy"/>
+                    <constraint firstItem="4LA-dg-cUr" firstAttribute="centerX" secondItem="gIp-Ho-8D9" secondAttribute="centerX" id="9Qs-QY-aZi"/>
                     <constraint firstItem="dJS-qc-ia3" firstAttribute="leading" secondItem="gIp-Ho-8D9" secondAttribute="leading" id="IPK-KU-s6T"/>
                     <constraint firstItem="BJq-94-XBn" firstAttribute="centerY" secondItem="vRf-2M-lY6" secondAttribute="centerY" id="KOH-xq-hhS"/>
+                    <constraint firstItem="arg-Uw-iSr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4LA-dg-cUr" secondAttribute="trailing" constant="20" id="Kcu-mr-1Mf"/>
                     <constraint firstAttribute="trailing" secondItem="dJS-qc-ia3" secondAttribute="trailing" id="Lqf-xj-zwY"/>
                     <constraint firstItem="vRf-2M-lY6" firstAttribute="leading" secondItem="BJq-94-XBn" secondAttribute="trailing" constant="8" id="Me2-h8-vG9"/>
                     <constraint firstItem="BJq-94-XBn" firstAttribute="leading" secondItem="gIp-Ho-8D9" secondAttribute="leading" constant="8" id="SPb-7y-d75"/>
                     <constraint firstItem="dJS-qc-ia3" firstAttribute="top" secondItem="BJq-94-XBn" secondAttribute="bottom" constant="8" id="bP8-PK-rsV"/>
-                    <constraint firstItem="arg-Uw-iSr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vRf-2M-lY6" secondAttribute="trailing" constant="20" id="hM6-mX-VKx"/>
+                    <constraint firstItem="4LA-dg-cUr" firstAttribute="firstBaseline" secondItem="BJq-94-XBn" secondAttribute="firstBaseline" id="eda-FE-znx"/>
                     <constraint firstItem="arg-Uw-iSr" firstAttribute="top" secondItem="BJq-94-XBn" secondAttribute="top" id="j1L-9o-7tM"/>
                 </constraints>
             </view>
