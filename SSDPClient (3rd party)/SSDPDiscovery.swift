@@ -144,7 +144,12 @@ public class SSDPDiscovery {
 				// Also, with multiple interfaces, some may fail, and we need to ignore that, too, or it gets too difficult to handle for the caller
 				// to sort out which work and which don't.
 				socket?.close();
-				print("Socket error: \(error) on interface \(interface ?? "default")")
+				
+				if let error: Socket.Error = error as? Socket.Error, error.errorCode == Socket.SOCKET_ERR_WRITE_FAILED {
+					// no need to report "not reachable"
+				} else {
+					print("Socket error: \(error) on interface \(interface ?? "default")")
+				}
 			}
 		}
 
