@@ -6,7 +6,7 @@ import Foundation
 /// Delegate for service discovery
 public protocol SSDPDiscoverySwiftDelegate {
 	/// Tells the delegate a requested service has been discovered.
-	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscoverService: SSDPServiceSwift)
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscover service: SSDPServiceSwift)
 
 	/// Tells the delegate that the discovery ended due to an error.
 	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didFinishWithError error: Error)
@@ -19,7 +19,7 @@ public protocol SSDPDiscoverySwiftDelegate {
 }
 
 public extension SSDPDiscoverySwiftDelegate {
-	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscoverService: SSDPServiceSwift) {}
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscover service: SSDPServiceSwift) {}
 
 	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didFinishWithError error: Error) {}
 
@@ -67,7 +67,7 @@ public class SSDPDiscoverySwift {
 					let response = String(data: data, encoding: .utf8)
 					let (remoteHost, _) = Socket.hostnameAndPort(from: address!)!
 					//Log.debug("Received: \(response!) from \(remoteHost)")
-					self.delegate?.ssdpDiscovery(self, didDiscoverService: SSDPServiceSwift(host: remoteHost, response: response!))
+					self.delegate?.ssdpDiscovery(self, didDiscover: SSDPServiceSwift(host: remoteHost, response: response!))
 				}
 
 			} catch let error {

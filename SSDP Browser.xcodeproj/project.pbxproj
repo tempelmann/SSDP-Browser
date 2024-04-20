@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		A464C1662BD4385900261F1E /* SSDPService.m in Sources */ = {isa = PBXBuildFile; fileRef = A464C1652BD4385900261F1E /* SSDPService.m */; };
 		A4F6CBEB2BD4547300CA385E /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F6CBE92BD4547300CA385E /* GCDAsyncUdpSocket.m */; };
-		A4F6CBF22BD45C9400CA385E /* SSDPDiscoverySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB42B7D44F9003F8770 /* SSDPDiscoverySwift.swift */; };
-		A4F6CBF32BD45C9400CA385E /* SSDPServiceSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB52B7D44F9003F8770 /* SSDPServiceSwift.swift */; };
-		A4F6CBF42BD45C9A00CA385E /* Socket+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA32B7D44B5003F8770 /* Socket+Equatable.swift */; };
-		A4F6CBF52BD45C9A00CA385E /* Socket+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA42B7D44B5003F8770 /* Socket+Hashable.swift */; };
-		A4F6CBF62BD45C9A00CA385E /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA62B7D44B5003F8770 /* Socket.swift */; };
-		A4F6CBF72BD45C9A00CA385E /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */; };
-		A4F6CBF82BD45C9A00CA385E /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA82B7D44B5003F8770 /* SocketUtils.swift */; };
+		A4F6CBF92BD466EF00CA385E /* SSDPDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = A464C1682BD4386A00261F1E /* SSDPDiscovery.m */; };
+		A4F6CBFA2BD471D200CA385E /* SSDPDiscoverySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB42B7D44F9003F8770 /* SSDPDiscoverySwift.swift */; };
+		A4F6CBFB2BD471D200CA385E /* SSDPServiceSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB52B7D44F9003F8770 /* SSDPServiceSwift.swift */; };
+		A4F6CBFC2BD471D200CA385E /* Socket+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA32B7D44B5003F8770 /* Socket+Equatable.swift */; };
+		A4F6CBFD2BD471D200CA385E /* Socket+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA42B7D44B5003F8770 /* Socket+Hashable.swift */; };
+		A4F6CBFE2BD471D200CA385E /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA62B7D44B5003F8770 /* Socket.swift */; };
+		A4F6CBFF2BD471D200CA385E /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */; };
+		A4F6CC002BD471D200CA385E /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA82B7D44B5003F8770 /* SocketUtils.swift */; };
 		A4FEAA662B8E349F00FD51D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA652B8E349F00FD51D6 /* AppDelegate.m */; };
 		A4FEAA692B8E349F00FD51D6 /* SSDPDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA682B8E349F00FD51D6 /* SSDPDocument.m */; };
 		A4FEAA6C2B8E349F00FD51D6 /* SSDPDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4FEAA6A2B8E349F00FD51D6 /* SSDPDocument.xib */; };
@@ -239,21 +240,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4F6CBF82BD45C9A00CA385E /* SocketUtils.swift in Sources */,
-				A4F6CBF22BD45C9400CA385E /* SSDPDiscoverySwift.swift in Sources */,
+				A4F6CC002BD471D200CA385E /* SocketUtils.swift in Sources */,
 				A4FEAA8F2B8E8BA600FD51D6 /* SSDPBrowser.swift in Sources */,
-				A4F6CBF62BD45C9A00CA385E /* Socket.swift in Sources */,
+				A4F6CBF92BD466EF00CA385E /* SSDPDiscovery.m in Sources */,
+				A4F6CBFE2BD471D200CA385E /* Socket.swift in Sources */,
 				A4FEAAA82B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m in Sources */,
-				A4F6CBF32BD45C9400CA385E /* SSDPServiceSwift.swift in Sources */,
-				A4F6CBF42BD45C9A00CA385E /* Socket+Equatable.swift in Sources */,
 				A464C1662BD4385900261F1E /* SSDPService.m in Sources */,
-				A4F6CBF52BD45C9A00CA385E /* Socket+Hashable.swift in Sources */,
+				A4F6CBFC2BD471D200CA385E /* Socket+Equatable.swift in Sources */,
 				A4FEAA742B8E34A000FD51D6 /* main.m in Sources */,
+				A4F6CBFD2BD471D200CA385E /* Socket+Hashable.swift in Sources */,
+				A4F6CBFB2BD471D200CA385E /* SSDPServiceSwift.swift in Sources */,
 				A4FEAA962B8E90E300FD51D6 /* PredicateOutlineNode.m in Sources */,
 				A4F6CBEB2BD4547300CA385E /* GCDAsyncUdpSocket.m in Sources */,
 				A4FEAA662B8E349F00FD51D6 /* AppDelegate.m in Sources */,
 				A4FEAA9F2B8E95F200FD51D6 /* TreeNode.m in Sources */,
-				A4F6CBF72BD45C9A00CA385E /* SocketProtocols.swift in Sources */,
+				A4F6CBFA2BD471D200CA385E /* SSDPDiscoverySwift.swift in Sources */,
+				A4F6CBFF2BD471D200CA385E /* SocketProtocols.swift in Sources */,
 				A4FEAA692B8E349F00FD51D6 /* SSDPDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

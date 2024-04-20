@@ -7,16 +7,18 @@
 
 import Cocoa
 
-typealias SSDPDiscoveryDelegate = SSDPDiscoverySwiftDelegate
-typealias SSDPDiscovery = SSDPDiscoverySwift
-typealias SSDPService = SSDPServiceSwift
+#if false //|| true
+	typealias SSDPDiscoveryDelegate = SSDPDiscoverySwiftDelegate
+	typealias SSDPDiscovery = SSDPDiscoverySwift
+	typealias SSDPService = SSDPServiceSwift
+#endif
 
 public class SSDPBrowser: NSObject, DiscoveryDelegate
 {
 	var disc: Discovery? = nil
 	
 	@objc public func discover(delegate: DiscoveryDelegate) {
-		#if false
+		#if true
 		let addrs = self.getIFAddresses (includeIPv6: true)
 		#else
 		let addrs = [""]
@@ -137,7 +139,7 @@ private class XMLToDictBuilder: NSObject, XMLParserDelegate {
 		self.client.stop();
 	}
 
-	func ssdpDiscovery(_: SSDPDiscovery, didDiscoverService service: SSDPService) {
+	func ssdpDiscovery(_: SSDPDiscovery, didDiscover service: SSDPService) {
 		let uuid = service.uniqueServiceName // The "UUID" we need is the entire urn
 		if let uuid = uuid {
 			if titleByUUID[uuid] == nil {

@@ -16,7 +16,6 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 
 @interface SSDPDiscovery() <GCDAsyncUdpSocketDelegate>
 	@property NSMutableArray<GCDAsyncUdpSocket*> *sockets;
-
 	- (BOOL) isDiscovering;
 @end
 
@@ -26,45 +25,29 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
                                              fromAddress:(NSData *)address
                                        withFilterContext:(nullable id)filterContext
 {
-	NSLog(@"Received: %@", [GCDAsyncUdpSocket hostFromAddress:address]);
+	NSString *host = [GCDAsyncUdpSocket hostFromAddress:address];
+	NSString *msg = [NSString.alloc initWithData:data encoding:NSUTF8StringEncoding];
+	if (msg.length > 0) {
+		SSDPService *service = [SSDPService.alloc initHost:host response:msg];
+		[self.delegate ssdpDiscovery:self didDiscoverService:service];
+	}
+}
+
+-(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error {
+	NSLog(@"%s %@", __func__, error);
 }
 
 - (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError  * _Nullable)error
 {
 	[self.sockets removeObject:sock];
-	NSLog(@"Error: %@", error);
-}
-
-
-/*
-- (void) readResponses
-{
-	for (GCDAsyncUdpSocket *socket in self.sockets) {
-		NSMutableData *data = NSMutableData.new;
-		//	let (bytesRead, address) = try socket.readDatagram(into: &data)
-		if (bytesRead > 0) {
-			let response = String(data: data, encoding: .utf8);
-			let (remoteHost, _) = Socket.hostnameAndPort(from: address!);
-			self.delegate?.ssdpDiscovery(self, didDiscoverService: SSDPService(host: remoteHost, response: response!));
-		}
-		if (error) {
-			self.forceStop();
-			self.delegate?.ssdpDiscovery(self, didFinishWithError: error);
+	if (error) {
+		if (error.code == 65) {
+			// no need to report "not reachable"
+		} else {
+			NSLog(@"Socket error: %@", error);
 		}
 	}
 }
-- (void) readResponsesForDuration:(NSTimeInterval)duration {
-	dispatch_queue_t queue = dispatch_get_global_queue (QOS_CLASS_USER_INITIATED, 0);
-	dispatch_async(queue, ^{
-		while (self.isDiscovering) {
-			[self readResponses];
-		}
-	});
-	dispatch_after (dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), queue, ^{
-		[self stop];
-	});
-}
-*/
 
 - (instancetype) init {
 	if (self = [super init]) {
@@ -95,62 +78,68 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	if ([self.delegate respondsToSelector:@selector(ssdpDiscoveryDidStart:)]) {
 		[self.delegate ssdpDiscoveryDidStart:self];
 	}
-    
+
+	dispatch_queue_t queue = dispatch_get_main_queue();
+
 	for (__strong NSString *interface in onInterfaces) {
 		if (interface.length == 0) {
 			interface = nil;
 		}
+		// Determine the multicast address based on the interface's address type (ipv4 vs ipv6)
+		BOOL useIP4;
+		NSString *multicastAddr;
+		NSData *interface4 = nil;
+		NSData *interface6 = nil;
+		[GCDAsyncUdpSocket convertInterfaceDescription:interface port:port intoAddress4:&interface4 address6:&interface6];
+		if (interface4) {
+			multicastAddr = @"239.255.255.250";
+			useIP4 = YES;
+		} else if (interface6) {
+			multicastAddr = @"ff02::c";	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
+			useIP4 = NO;
+		} else {
+			continue;
+		}
+		// Set up the UDP socket
 		NSError *error = nil;
-		GCDAsyncUdpSocket *socket = [GCDAsyncUdpSocket.alloc initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+		GCDAsyncUdpSocket *socket = [GCDAsyncUdpSocket.alloc initWithDelegate:self delegateQueue:queue];
+		socket.userTag = interface;
 		@try {
 			[socket enableReusePort:YES error:&error];
 			if (error) {
 				[NSException raise:SSDPDiscoveryException format:@"enableReusePort failed; %@", error];
 			}
+			[socket setIPv4Enabled:useIP4];
+			[socket setIPv6Enabled:!useIP4];
 			NSString *interfaceForBind = [interface componentsSeparatedByString:@"%"].lastObject;
 			if (interfaceForBind.length == 0) {
 				interfaceForBind = nil;
 			}
-			[socket bindToPort:port interface:interfaceForBind error:&error];
+			[socket bindToPort:0 interface:interfaceForBind error:&error];
 			if (error) {
 				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
 			}
-			// Determine the multicast address based on the interface's address type (ipv4 vs ipv6)
-			NSString *multicastAddr;
-	//				case ipv6:
-	//					multicastAddr = @"ff02::c";	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
-			multicastAddr = @"239.255.255.250";
-			[socket enableBroadcast:YES error:&error];
+			[socket beginReceiving:&error];
 			if (error) {
-				[NSException raise:SSDPDiscoveryException format:@"enableBroadcast %@ failed; %@", interfaceForBind, error];
-			}
-			[socket sendIPv4MulticastOnInterface:interfaceForBind error:&error];
-			if (error) {
-				[NSException raise:SSDPDiscoveryException format:@"sendIPv4MulticastOnInterface %@ failed; %@", interfaceForBind, error];
+				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
 			}
 			NSString *message = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nHOST: %@:%d\r\nST: %@\r\nMX: %d\r\n\r\n";
 			message = [NSString stringWithFormat:message, multicastAddr, (int)port, searchTarget, (int)duration];
-			[socket sendData:[message dataUsingEncoding:NSASCIIStringEncoding] toHost:multicastAddr port:port withTimeout:duration tag:0];
+			[socket sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toHost:multicastAddr port:port withTimeout:-1 tag:0];
 			[self.sockets addObject:socket];
 
 		} @catch (NSException *exception) {
-			// We ignore errors here because we get "-9980(0x-26FC), No route to host" if we're not allowed to multicast, and that's difficult to foresee.
-			// Also, with multiple interfaces, some may fail, and we need to ignore that, too, or it gets too difficult to handle for the caller
-			// to sort out which work and which don't.
 			[socket close];
-			
-			if (false) { //if let error: Socket.Error = error as? Socket.Error, error.errorCode == Socket.SOCKET_ERR_WRITE_FAILED {
-				// no need to report "not reachable"
-			} else {
-				NSLog (@"Socket error: %@ on interface %@", error, interface.length > 0 ? interface : @"localhost");
-			}
-		} @finally {
-			
+			NSLog (@"Socket error: %@ on interface %@", error, interface.length > 0 ? interface : @"localhost");
 		}
 
 	}
 
-	if (!self.isDiscovering) {    // Might we run into a race condition here?
+	if (self.isDiscovering) {    // Might we run into a race condition here?
+		dispatch_after (dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), queue, ^{
+			[self stop];
+		});
+	} else {
 		if ([self.delegate respondsToSelector:@selector(ssdpDiscoveryDidFinish:)]) {
 			[self.delegate ssdpDiscoveryDidFinish:self];
 		}

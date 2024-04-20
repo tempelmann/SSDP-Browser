@@ -163,6 +163,8 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
 
 @interface GCDAsyncUdpSocket : NSObject
 
+@property (strong) id userTag;
+
 /**
  * GCDAsyncUdpSocket uses the standard delegate paradigm,
  * but executes all delegate callbacks on a given delegate dispatch queue.
@@ -1030,6 +1032,11 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
 
 + (BOOL)getHost:(NSString * __nullable * __nullable)hostPtr port:(uint16_t * __nullable)portPtr fromAddress:(NSData *)address;
 + (BOOL)getHost:(NSString * __nullable * __nullable)hostPtr port:(uint16_t * __nullable)portPtr family:(int * __nullable)afPtr fromAddress:(NSData *)address;
+
++ (void)convertInterfaceDescription:(NSString *)interfaceDescription
+                               port:(uint16_t)port
+                       intoAddress4:(NSData **)interfaceAddr4Ptr
+                           address6:(NSData **)interfaceAddr6Ptr;
 
 @end
 

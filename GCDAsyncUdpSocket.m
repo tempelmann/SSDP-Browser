@@ -15,8 +15,9 @@
 // For more information see: https://github.com/robbiehanson/CocoaAsyncSocket/wiki/ARC
 #endif
 
+#import <CFNetwork/CFNetwork.h>
+
 #if TARGET_OS_IPHONE
-  #import <CFNetwork/CFNetwork.h>
   #import <UIKit/UIKit.h>
 #endif
 
@@ -127,8 +128,8 @@ enum GCDAsyncUdpSocketFlags
 	kForbidSendReceive       = 1 << 14,  // If set, no new send or receive operations are allowed to be queued.
 	kCloseAfterSends         = 1 << 15,  // If set, close as soon as no more sends are queued.
 	kFlipFlop                = 1 << 16,  // Used to alternate between IPv4 and IPv6 sockets.
-#if TARGET_OS_IPHONE
 	kAddedStreamListener     = 1 << 17,  // If set, CFStreams have been added to listener thread
+#if TARGET_OS_IPHONE
 #endif
 };
 
@@ -203,7 +204,7 @@ enum GCDAsyncUdpSocketConfig
 
 	void *IsOnSocketQueueOrTargetQueueKey;    
 	
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 	CFStreamClientContext streamContext;
 	CFReadStreamRef readStream4;
 	CFReadStreamRef readStream6;
@@ -237,7 +238,7 @@ enum GCDAsyncUdpSocketConfig
 
 - (BOOL)performMulticastRequest:(int)requestType forGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError **)errPtr;
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 - (BOOL)createReadAndWriteStreams:(NSError **)errPtr;
 - (BOOL)registerForStreamCallbacks:(NSError **)errPtr;
 - (BOOL)addStreamsToRunLoop:(NSError **)errPtr;
@@ -251,7 +252,7 @@ enum GCDAsyncUdpSocketConfig
 + (uint16_t)portFromSockaddr4:(const struct sockaddr_in *)pSockaddr4;
 + (uint16_t)portFromSockaddr6:(const struct sockaddr_in6 *)pSockaddr6;
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 // Forward declaration
 + (void)listenerThread:(id)unused;
 #endif
@@ -1420,9 +1421,9 @@ enum GCDAsyncUdpSocketConfig
 
 /**
  * Finds the address(es) of an interface description.
- * An inteface description may be an interface name (en0, en1, lo0) or corresponding IP (192.168.4.34).
+ * An interface description may be an interface name (en0, en1, lo0) or corresponding IP (192.168.4.34).
 **/
-- (void)convertIntefaceDescription:(NSString *)interfaceDescription
++ (void)convertInterfaceDescription:(NSString *)interfaceDescription
                               port:(uint16_t)port
                       intoAddress4:(NSData **)interfaceAddr4Ptr
                           address6:(NSData **)interfaceAddr6Ptr
@@ -2842,7 +2843,7 @@ enum GCDAsyncUdpSocketConfig
 		NSData *interface4 = nil;
 		NSData *interface6 = nil;
 		
-		[self convertIntefaceDescription:interface port:port intoAddress4:&interface4 address6:&interface6];
+		[self.class convertInterfaceDescription:interface port:port intoAddress4:&interface4 address6:&interface6];
 		
 		if ((interface4 == nil) && (interface6 == nil))
 		{
@@ -3455,7 +3456,7 @@ enum GCDAsyncUdpSocketConfig
 		NSData *interfaceAddr4 = nil;
 		NSData *interfaceAddr6 = nil;
 		
-		[self convertIntefaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
+		[self.class convertInterfaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
 		
 		if ((interfaceAddr4 == nil) && (interfaceAddr6 == nil))
 		{
@@ -3556,7 +3557,7 @@ enum GCDAsyncUdpSocketConfig
         NSData *interfaceAddr4 = nil;
         NSData *interfaceAddr6 = nil;
 
-        [self convertIntefaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
+        [self.class convertInterfaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
 
         if (interfaceAddr4 == nil)
         {
@@ -3614,7 +3615,7 @@ enum GCDAsyncUdpSocketConfig
         NSData *interfaceAddr4 = nil;
         NSData *interfaceAddr6 = nil;
 
-        [self convertIntefaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
+        [self.class convertInterfaceDescription:interface port:0 intoAddress4:&interfaceAddr4 address6:&interfaceAddr6];
 
         if (interfaceAddr6 == nil)
         {
@@ -4793,7 +4794,7 @@ enum GCDAsyncUdpSocketConfig
 	BOOL shouldCallDelegate = (flags & kDidCreateSockets) ? YES : NO;
 	
 	// Close all sockets, send/receive sources, cfstreams, etc
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 	[self removeStreamsFromRunLoop];
 	[self closeReadAndWriteStreams];
 #endif
@@ -4847,7 +4848,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark CFStream
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 
 static NSThread *listenerThread;
 
@@ -5396,7 +5397,7 @@ Failed:
 	return socket6FD;
 }
 
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE || 1
 
 - (CFReadStreamRef)readStream
 {
