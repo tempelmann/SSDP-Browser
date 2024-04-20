@@ -4,38 +4,38 @@ import Foundation
 // MARK: Protocols
 
 /// Delegate for service discovery
-public protocol SSDPDiscoveryDelegate {
+public protocol SSDPDiscoverySwiftDelegate {
 	/// Tells the delegate a requested service has been discovered.
-	func ssdpDiscovery(_ discovery: SSDPDiscovery, didDiscoverService service: SSDPService)
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscoverService: SSDPServiceSwift)
 
 	/// Tells the delegate that the discovery ended due to an error.
-	func ssdpDiscovery(_ discovery: SSDPDiscovery, didFinishWithError error: Error)
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didFinishWithError error: Error)
 
 	/// Tells the delegate that the discovery has started.
-	func ssdpDiscoveryDidStart(_ discovery: SSDPDiscovery)
+	func ssdpDiscoveryDidStart(_ discovery: SSDPDiscoverySwift)
 
 	/// Tells the delegate that the discovery has finished.
-	func ssdpDiscoveryDidFinish(_ discovery: SSDPDiscovery)
+	func ssdpDiscoveryDidFinish(_ discovery: SSDPDiscoverySwift)
 }
 
-public extension SSDPDiscoveryDelegate {
-	func ssdpDiscovery(_ discovery: SSDPDiscovery, didDiscoverService service: SSDPService) {}
+public extension SSDPDiscoverySwiftDelegate {
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didDiscoverService: SSDPServiceSwift) {}
 
-	func ssdpDiscovery(_ discovery: SSDPDiscovery, didFinishWithError error: Error) {}
+	func ssdpDiscovery(_ discovery: SSDPDiscoverySwift, didFinishWithError error: Error) {}
 
-	func ssdpDiscoveryDidStart(_ discovery: SSDPDiscovery) {}
+	func ssdpDiscoveryDidStart(_ discovery: SSDPDiscoverySwift) {}
 
-	func ssdpDiscoveryDidFinish(_ discovery: SSDPDiscovery) {}
+	func ssdpDiscoveryDidFinish(_ discovery: SSDPDiscoverySwift) {}
 }
 
 /// SSDP discovery for UPnP devices on the LAN
-public class SSDPDiscovery {
+public class SSDPDiscoverySwift {
 
 	/// The UDP socket
 	private var sockets: [Socket] = []
 
 	/// Delegate for service discovery
-	public var delegate: SSDPDiscoveryDelegate?
+	public var delegate: SSDPDiscoverySwiftDelegate?
 
 	/// The client is discovering
 	public var isDiscovering: Bool {
@@ -67,7 +67,7 @@ public class SSDPDiscovery {
 					let response = String(data: data, encoding: .utf8)
 					let (remoteHost, _) = Socket.hostnameAndPort(from: address!)!
 					//Log.debug("Received: \(response!) from \(remoteHost)")
-					self.delegate?.ssdpDiscovery(self, didDiscoverService: SSDPService(host: remoteHost, response: response!))
+					self.delegate?.ssdpDiscovery(self, didDiscoverService: SSDPServiceSwift(host: remoteHost, response: response!))
 				}
 
 			} catch let error {
@@ -108,7 +108,7 @@ public class SSDPDiscovery {
 			- duration: The amount of time to wait.
 			- searchTarget: The type of the searched service.
 	*/
-	open func discoverService(forDuration duration: TimeInterval = 10, searchTarget: String = "ssdp:all", port: Int32 = 1900, onInterfaces:[String?] = [nil]) {
+	open func discoverService(forDuration duration: TimeInterval = 10, searchTarget: String = "ssdp:all", port: Int32 = 1900, onInterfaces:[String] = [""]) {
 		//Log.info("Start SSDP discovery for \(Int(duration)) duration...")
 		self.delegate?.ssdpDiscoveryDidStart(self)
 		
@@ -116,20 +116,25 @@ public class SSDPDiscovery {
 			var socket: Socket? = nil
 			do {
 				// Determine the multicase address based on the interface's address type (ipv4 vs ipv6)
-				let interfaceAddr = Socket.createAddress(for: interface ?? "127.0.0.1", on: 0)
-				let multicastAddr: String
 				let family: Socket.ProtocolFamily
-				switch interfaceAddr {
-					case .ipv6?:
-						multicastAddr = "ff02::c"	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
+				let multicastAddr: String
+				if interface == "" {
+					family = .inet
+					multicastAddr = "239.255.255.250"
+				} else {
+					let interfaceAddr = Socket.createAddress(for: interface, on: 0)
+					switch interfaceAddr {
+					  case .ipv6?:
 						family = .inet6
-					default:
-						multicastAddr = "239.255.255.250"
+						multicastAddr = "ff02::c"	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
+					  default:
 						family = .inet
+						multicastAddr = "239.255.255.250"
+					}
 				}
 				socket = try Socket.create(family: family, type: .datagram, proto: .udp)
 				if let socket = socket {
-					try socket.listen(on: 0, node: interface)   // node:nil means the default interface, for all others it should be the interface's IP address
+					try socket.listen(on: 0, node: interface == "" ? nil : interface)   // node:nil means the default interface, for all others it should be the interface's IP address
 					// Use Multicast (Caution: Gets blocked by iOS 16 unless the app has the multicast entitlement!)
 					let message = "M-SEARCH * HTTP/1.1\r\n" +
 						"MAN: \"ssdp:discover\"\r\n" +
@@ -148,7 +153,7 @@ public class SSDPDiscovery {
 				if let error: Socket.Error = error as? Socket.Error, error.errorCode == Socket.SOCKET_ERR_WRITE_FAILED {
 					// no need to report "not reachable"
 				} else {
-					print("Socket error: \(error) on interface \(interface ?? "default")")
+					print("Socket error: \(error) on interface \(interface.isEmpty ? "default" : interface)")
 				}
 			}
 		}

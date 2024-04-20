@@ -7,12 +7,20 @@
 
 import Cocoa
 
+typealias SSDPDiscoveryDelegate = SSDPDiscoverySwiftDelegate
+typealias SSDPDiscovery = SSDPDiscoverySwift
+typealias SSDPService = SSDPServiceSwift
+
 public class SSDPBrowser: NSObject, DiscoveryDelegate
 {
 	var disc: Discovery? = nil
 	
 	@objc public func discover(delegate: DiscoveryDelegate) {
+		#if false
 		let addrs = self.getIFAddresses (includeIPv6: true)
+		#else
+		let addrs = [""]
+		#endif
 		self.disc = Discovery (delegate: delegate, onInterfaces:addrs)
 	}
 
@@ -110,7 +118,7 @@ private class XMLToDictBuilder: NSObject, XMLParserDelegate {
 	func discoveryDidFinish ()
 }
 
-class Discovery: SSDPDiscoveryDelegate
+@objc class Discovery: NSObject, SSDPDiscoveryDelegate
 {
 	public var delegate: DiscoveryDelegate?
 
@@ -118,10 +126,11 @@ class Discovery: SSDPDiscoveryDelegate
 	private var titleByUUID = [String: String]()
 	private var stopped = false
 
-	init(forDuration: TimeInterval = 5, delegate: DiscoveryDelegate? = nil, onInterfaces:[String?] = [nil]) {
+	init(forDuration: TimeInterval = 5, delegate: DiscoveryDelegate? = nil, onInterfaces:[String] = [""]) {
+		super.init()
 		self.delegate = delegate
 		self.client.delegate = self
-		self.client.discoverService (forDuration:forDuration, onInterfaces:onInterfaces)
+		self.client.discoverService (forDuration:forDuration, searchTarget:"ssdp:all", port:1900, onInterfaces:onInterfaces)
 	}
 	
 	func stop() {
@@ -155,6 +164,13 @@ class Discovery: SSDPDiscoveryDelegate
 	}
 	
 	func ssdpDiscoveryDidFinish(_ discovery: SSDPDiscovery) {
+		self.stopped = true
+		DispatchQueue.main.async { [weak self] in
+			self?.delegate?.discoveryDidFinish()
+		}
+	}
+
+	func ssdpDiscovery(_ discovery: SSDPDiscovery, didFinishWithError error: NSErrorPointer) {
 		self.stopped = true
 		DispatchQueue.main.async { [weak self] in
 			self?.delegate?.discoveryDidFinish()

@@ -2,7 +2,7 @@ import Foundation
 
 private let HeaderRegex = try! NSRegularExpression(pattern: "^([^\r\n:]+): (.*)$", options: [.anchorsMatchLines])
 
-public class SSDPService: CustomStringConvertible {
+public class SSDPServiceSwift: CustomStringConvertible {
 	/// The host of service
 	public internal(set) var host: String
 	/// The headers of the original response
@@ -19,7 +19,7 @@ public class SSDPService: CustomStringConvertible {
 	// MARK: Initialisation
 	
 	/**
-	 Initialize the `SSDPService` with the discovery response.
+	 Initialize the `SSDPServiceSwift` with the discovery response.
 	 
 	 - Parameters:
 	 - host: The host of service
