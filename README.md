@@ -6,10 +6,9 @@ It looks on *all* interfaces, not just only on the default interface. Which mean
 
 It uses Cocoa Binding excessively and is quite compact. It also uses a smart method for identifying the nodes for dynamic update of the displayed names depending on the search term, despite using an `NSTreeController`.
 
-The source includes the following 3rd party sources:
+The ObjC source code, which is free of any Swift code since v1.0.3, includes the following 3rd party sources:
 
-- BlueSocket (Apache 2.0 License).
-- SSDPClient (MIT License), updated to support multiple interfaces.
+- [GCDAsyncUdpSocket](https://github.com/robbiehanson/CocoaAsyncSocket) (Public Domain), slightly modified.
 
 It was tested on macOS 10.13, built with Xcode 10.1
 
