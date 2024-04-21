@@ -132,6 +132,12 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 			if (error) {
 				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
 			}
+			if (useIP4) {
+				// Apparently needed when using a VPN that routes all traffic thru the tunnel
+				[socket sendIPv4MulticastOnInterface:interfaceForBind error:nil];
+			} else {
+				[socket sendIPv6MulticastOnInterface:interfaceForBind error:nil];
+			}
 			[socket beginReceiving:&error];
 			if (error) {
 				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
