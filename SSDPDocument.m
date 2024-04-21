@@ -14,7 +14,7 @@
 	#import "SSDP_Browser-Swift.h"
 #endif
 
-@interface SSDPDocument () <DiscoveryDelegate, NSWindowDelegate, NSSearchFieldDelegate>
+@interface SSDPDocument () <SSDPBrowserDelegate, NSWindowDelegate, NSSearchFieldDelegate>
 	@property (weak) IBOutlet NSProgressIndicator *searchSpinner;
 	@property (weak) IBOutlet NSOutlineView *outlineView;
 	@property (strong) IBOutlet NSTreeController *treeController;
@@ -86,7 +86,7 @@
 	self.isSearching = YES;
 	self.searchSpinner.hidden = NO;
 	[self.searchSpinner startAnimation:self];
-	[self.browser discoverWithDelegate:self];
+	[self.browser discoverEverythingOnAllInterfacesWithDelegate:self];
 }
 
 - (TreeNode*) makeTreeNodeFrom:(NSObject*)value withName:(NSString*)name {
@@ -114,7 +114,7 @@
 	return nil;
 }
 
-- (void)discoveryDidFindUUID:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data
+- (void)browser:(SSDPBrowser*)browser didFindUUID:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data
 {
 	// 	NSLog(@"add %@", uuid);
 
@@ -161,7 +161,7 @@
 	parent.children = newChildren;	// The assignment triggers a reload in the OutlineView via its NSTreeController
 }
 
-- (void)discoveryDidFinish { 
+- (void)browserDidFinish:(SSDPBrowser*)browser { 
 	self.isSearching = NO;
 	[self.searchSpinner stopAnimation:self];
 	self.searchSpinner.hidden = YES;

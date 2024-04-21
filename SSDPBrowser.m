@@ -17,41 +17,77 @@
 #include <netdb.h>
 
 
-@interface Discovery: NSObject <SSDPDiscoveryDelegate>
-	@property (weak) id<DiscoveryDelegate> delegate;
-	- (instancetype) initForDuration:(NSTimeInterval)duration delegate:(id<DiscoveryDelegate>)delegate onInterfaces:(NSArray<NSString*>*)onInterfaces;
-	- (void) stop;
-@end
-
-
-@interface SSDPBrowser()
-	@property Discovery *disc;
+@interface SSDPBrowser() <SSDPDiscoveryDelegate>
+	@property id<SSDPBrowserDelegate> delegate;
+	@property SSDPDiscovery *client;
+	@property NSMutableDictionary *titleByUUID;
+	@property BOOL stopped;
 @end
 
 @implementation SSDPBrowser
 
-- (void) discoverWithDelegate:(id<DiscoveryDelegate>)delegate {
-	#if true
-		NSArray *addrs = [self getIFAddressesIncludeIPv6:true];
-	#else
-		NSArray *addrs = @[""];
-	#endif
-	self.disc = [Discovery.alloc initForDuration:5 delegate:delegate onInterfaces:addrs];
+- (void) discoverEverythingOnAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate {
+	[self discover:@"ssdp:all" onAllInterfacesWithDelegate:delegate];
+}
+
+- (void) discoverRootdevicesOnAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate {
+	[self discover:@"upnp:rootdevice" onAllInterfacesWithDelegate:delegate];
+}
+
+- (void) discover:(NSString*)target onAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate {
+	[self discover:target onInterfaces:[self allInterfacesIncludeIPv6:YES] delegate:delegate];
+}
+
+- (void) discover:(NSString*)target onInterfaces:(NSArray<NSString*>*)interfaces delegate:(id<SSDPBrowserDelegate>)delegate {
+	const int duration = 5;
+	self.delegate = delegate;
+	self.titleByUUID = NSMutableDictionary.new;
+	self.client = SSDPDiscovery.new;
+	self.client.delegate = self;
+	[self.client discoverServiceForDuration:duration searchTarget:target port:1900 onInterfaces:interfaces];
 }
 
 - (void) stop {
-	[self.disc stop];
+	[self.client stop];
 }
 
-- (void) discoveryDidFindUUID:(NSString*)uuid name:(NSString*)name data:(NSDictionary*)data {
-	NSLog (@"Found %@", name);
+- (void) ssdpDiscovery:(SSDPDiscovery *)discovery didDiscoverService:(SSDPService *)service { 
+	NSString *uuid = service.uniqueServiceName;
+	if (uuid) {
+		if (self.titleByUUID[uuid] == nil) {
+			// Download the XML description in order to determine the service's name
+			NSURL *url = [NSURL URLWithString:service.location];
+			NSURLSessionTask *task = [NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+				if (self.titleByUUID[uuid] == nil && data.length > 0) {
+					XMLToDictBuilder *xmlToDict = XMLToDictBuilder.new;
+					NSDictionary *dict = [xmlToDict parseData:data];
+					NSString *friendlyName = dict[@"root"][@"device"][@"friendlyName"];
+					self.titleByUUID[uuid] = friendlyName;
+					dispatch_async(dispatch_get_main_queue(), ^{
+						[self.delegate browser:self didFindUUID:uuid name:friendlyName data:dict];
+					});
+				}
+			}];
+			[task resume];
+		}
+	}
 }
 
-- (void) discoveryDidFinish {
-	NSLog (@"Finished.");
+- (void) ssdpDiscoveryDidFinish:(SSDPDiscovery*)discovery {
+	self.stopped = true;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.delegate browserDidFinish:self];
+	});
 }
 
-- (NSArray*) getIFAddressesIncludeIPv6:(BOOL)includeIPv6 {	// https://stackoverflow.com/a/25627545/43615
+- (void) ssdpDiscovery:(SSDPDiscovery*)discovery didFinishWithError:(NSError*)error {
+	self.stopped = true;
+	dispatch_async(dispatch_get_main_queue(), ^{
+		[self.delegate browserDidFinish:self];
+	});
+}
+
+- (NSArray<NSString*>*) allInterfacesIncludeIPv6:(BOOL)includeIPv6 {	// https://stackoverflow.com/a/25627545/43615
 	NSMutableArray *addresses = NSMutableArray.new;
 
 	// Get list of all interfaces on the local machine:
@@ -80,71 +116,6 @@
 	freeifaddrs(ifaddr);
 	
 	return addresses;
-}
-
-@end
-
-
-#pragma mark -
-
-
-@interface Discovery()
-	@property SSDPDiscovery *client;
-	@property NSMutableDictionary *titleByUUID;
-	@property BOOL stopped;
-@end
-
-@implementation Discovery
-
-- (instancetype) initForDuration:(NSTimeInterval)duration delegate:(id<DiscoveryDelegate>)delegate onInterfaces:(NSArray<NSString*>*)onInterfaces {
-	if (self = [super init]) {
-		self.delegate = delegate;
-		self.titleByUUID = NSMutableDictionary.new;
-		self.client = SSDPDiscovery.new;
-		self.client.delegate = self;
-		[self.client discoverServiceForDuration:duration searchTarget:@"ssdp:all" port:1900 onInterfaces:onInterfaces];
-	}
-	return self;
-}
-
-- (void) stop {
-	[self.client stop];
-}
-
-- (void) ssdpDiscovery:(SSDPDiscovery *)discovery didDiscoverService:(SSDPService *)service { 
-	NSString *uuid = service.uniqueServiceName;
-	if (uuid) {
-		if (self.titleByUUID[uuid] == nil) {
-			// Download the XML description in order to determine the service's name
-			NSURL *url = [NSURL URLWithString:service.location];
-			NSURLSessionTask *task = [NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-				if (self.titleByUUID[uuid] == nil && data.length > 0) {
-					XMLToDictBuilder *xmlToDict = XMLToDictBuilder.new;
-					NSDictionary *dict = [xmlToDict parseData:data];
-					NSString *friendlyName = dict[@"root"][@"device"][@"friendlyName"];
-					self.titleByUUID[uuid] = friendlyName;
-					dispatch_async(dispatch_get_main_queue(), ^{
-						[self.delegate discoveryDidFindUUID:uuid name:friendlyName data:dict];
-					});
-				}
-			}];
-			[task resume];
-		}
-	}
-}
-
-- (void) ssdpDiscoveryDidFinish:(SSDPDiscovery*)discovery {
-	self.stopped = true;
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate discoveryDidFinish];
-	});
-}
-
-- (void) ssdpDiscovery:(SSDPDiscovery*)discovery didFinishWithError:(NSError*)error {
-	self.stopped = true;
-	dispatch_async(dispatch_get_main_queue(), ^{
-		[self.delegate discoveryDidFinish];
-	});
 }
 
 @end

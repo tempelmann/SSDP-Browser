@@ -10,14 +10,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol DiscoveryDelegate <NSObject>
-	- (void) discoveryDidFindUUID:(NSString*)uuid name:(NSString*)name data:(NSDictionary*)data;
-	- (void) discoveryDidFinish;
+@class SSDPBrowser;
+
+@protocol SSDPBrowserDelegate <NSObject>
+	- (void) browser:(SSDPBrowser*)browser didFindUUID:(NSString*)uuid name:(NSString*)name data:(NSDictionary*)data;
+	- (void) browserDidFinish:(SSDPBrowser*)browser;
 @end
 
 @interface SSDPBrowser : NSObject
-	- (void) discoverWithDelegate:(id<DiscoveryDelegate>)delegate;
+	- (void) discoverEverythingOnAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate;
+	- (void) discoverRootdevicesOnAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate;
+	- (void) discover:(NSString*)target onAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate;
+	- (void) discover:(NSString*)target onInterfaces:(NSArray<NSString*>*)interfaces delegate:(id<SSDPBrowserDelegate>)delegate;
 	- (void) stop;
+	- (NSArray<NSString*>*) allInterfacesIncludeIPv6:(BOOL)includeIPv6;
 @end
 
 NS_ASSUME_NONNULL_END
