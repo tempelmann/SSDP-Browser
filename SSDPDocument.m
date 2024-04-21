@@ -33,10 +33,17 @@
     if (self) {
 		self.model = TreeNode.new;
 		self.browser = SSDPBrowser.new;
-		self.filterMatchAttributes = @{
-			NSForegroundColorAttributeName:[NSColor colorNamed:@"match fg color"],	// from assets
-			NSBackgroundColorAttributeName:[NSColor colorNamed:@"match bg color"]
-		};
+		if (@available(macOS 10.13, *)) {
+			self.filterMatchAttributes = @{
+				NSForegroundColorAttributeName:[NSColor colorNamed:@"match fg color"],	// from assets
+				NSBackgroundColorAttributeName:[NSColor colorNamed:@"match bg color"]
+			};
+		} else {
+			self.filterMatchAttributes = @{
+				NSForegroundColorAttributeName:[NSColor controlTextColor],
+				NSBackgroundColorAttributeName:[NSColor secondarySelectedControlColor]
+			};
+		}
     }
     return self;
 }
