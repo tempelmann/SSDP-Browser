@@ -71,8 +71,6 @@
 				char hostname[NI_MAXHOST];
 				if (getnameinfo(ptr->ifa_addr, addr->sa_len, (char*)&hostname, sizeof(hostname), nil, 0, NI_NUMERICHOST) == 0) {
 					NSString *address = [NSString stringWithUTF8String:hostname];
-					// removing the %… suffix from IPv6 doesn't seem to make a difference:
-					//	address = String(address.split(separator: "%", maxSplits: 1, omittingEmptySubsequences: true).first ?? "")
 					[addresses addObject:address];
 				}
 			}

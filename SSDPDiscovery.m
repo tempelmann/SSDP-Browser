@@ -79,7 +79,7 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	return self.sockets.count > 0;
 }
 
-- (void) discoverServiceForDuration:(NSTimeInterval)duration searchTarget:(NSString*)searchTarget port:(SInt32)port onInterfaces:(NSArray<NSString*>*)onInterfaces
+- (void) discoverServiceForDuration:(NSTimeInterval)duration searchTarget:(NSString*)searchTarget port:(UInt16)port onInterfaces:(NSArray<NSString*>*)onInterfaces
 {
 	id tmpDelegate = self.delegate;
 	self.delegate = nil;

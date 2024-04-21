@@ -14,6 +14,7 @@
 #import <Availability.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
 extern NSString *const GCDAsyncUdpSocketException;
 extern NSString *const GCDAsyncUdpSocketErrorDomain;
 
@@ -195,7 +196,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
 - (void)setDelegateQueue:(nullable dispatch_queue_t)delegateQueue;
 - (void)synchronouslySetDelegateQueue:(nullable dispatch_queue_t)delegateQueue;
 
-- (void)getDelegate:(id<GCDAsyncUdpSocketDelegate> __nullable * __nullable)delegatePtr delegateQueue:(dispatch_queue_t __nullable * __nullable)delegateQueuePtr;
+- (void)getDelegate:(id<GCDAsyncUdpSocketDelegate> _Nullable __autoreleasing * __nullable)delegatePtr delegateQueue:(dispatch_queue_t _Nullable __autoreleasing * __nullable)delegateQueuePtr;
 - (void)setDelegate:(nullable id<GCDAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
 - (void)synchronouslySetDelegate:(nullable id<GCDAsyncUdpSocketDelegate>)delegate delegateQueue:(nullable dispatch_queue_t)delegateQueue;
 
@@ -366,7 +367,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass NULL for errPtr.
 **/
-- (BOOL)bindToPort:(uint16_t)port error:(NSError **)errPtr;
+- (BOOL)bindToPort:(uint16_t)port error:(NSError *__autoreleasing*)errPtr;
 
 /**
  * Binds the UDP socket to the given port and optional interface.
@@ -388,7 +389,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass NULL for errPtr.
 **/
-- (BOOL)bindToPort:(uint16_t)port interface:(nullable NSString *)interface error:(NSError **)errPtr;
+- (BOOL)bindToPort:(uint16_t)port interface:(nullable NSString *)interface error:(NSError *__autoreleasing*)errPtr;
 
 /**
  * Binds the UDP socket to the given address, specified as a sockaddr structure wrapped in a NSData object.
@@ -408,7 +409,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass NULL for errPtr.
 **/
-- (BOOL)bindToAddress:(NSData *)localAddr error:(NSError **)errPtr;
+- (BOOL)bindToAddress:(NSData *)localAddr error:(NSError *__autoreleasing*)errPtr;
 
 #pragma mark Connecting
 
@@ -435,7 +436,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * Otherwise, this method returns YES and begins the asynchronous connection process.
  * The result of the asynchronous connection process will be reported via the delegate methods.
  **/
-- (BOOL)connectToHost:(NSString *)host onPort:(uint16_t)port error:(NSError **)errPtr;
+- (BOOL)connectToHost:(NSString *)host onPort:(uint16_t)port error:(NSError *__autoreleasing*)errPtr;
 
 /**
  * Connects the UDP socket to the given address, specified as a sockaddr structure wrapped in a NSData object.
@@ -466,7 +467,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * However, for compatibility and simplification of delegate code, if this method returns YES
  * then the corresponding delegate method (udpSocket:didConnectToHost:port:) is still invoked.
 **/
-- (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
+- (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError *__autoreleasing*)errPtr;
 
 #pragma mark Multicast
 
@@ -477,7 +478,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass nil for errPtr.
 **/
-- (BOOL)joinMulticastGroup:(NSString *)group error:(NSError **)errPtr;
+- (BOOL)joinMulticastGroup:(NSString *)group error:(NSError *__autoreleasing*)errPtr;
 
 /**
  * Join multicast group.
@@ -487,10 +488,10 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass nil for errPtr.
 **/
-- (BOOL)joinMulticastGroup:(NSString *)group onInterface:(nullable NSString *)interface error:(NSError **)errPtr;
+- (BOOL)joinMulticastGroup:(NSString *)group onInterface:(nullable NSString *)interface error:(NSError *__autoreleasing*)errPtr;
 
-- (BOOL)leaveMulticastGroup:(NSString *)group error:(NSError **)errPtr;
-- (BOOL)leaveMulticastGroup:(NSString *)group onInterface:(nullable NSString *)interface error:(NSError **)errPtr;
+- (BOOL)leaveMulticastGroup:(NSString *)group error:(NSError *__autoreleasing*)errPtr;
+- (BOOL)leaveMulticastGroup:(NSString *)group onInterface:(nullable NSString *)interface error:(NSError *__autoreleasing*)errPtr;
 
 /**
  * Send multicast on a specified interface.
@@ -501,8 +502,8 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass nil for errPtr.
 **/
 
-- (BOOL)sendIPv4MulticastOnInterface:(NSString*)interface error:(NSError **)errPtr;
-- (BOOL)sendIPv6MulticastOnInterface:(NSString*)interface error:(NSError **)errPtr;
+- (BOOL)sendIPv4MulticastOnInterface:(NSString*)interface error:(NSError *__autoreleasing*)errPtr;
+- (BOOL)sendIPv6MulticastOnInterface:(NSString*)interface error:(NSError *__autoreleasing*)errPtr;
 
 #pragma mark Reuse Port
 
@@ -513,7 +514,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * use the address+port simultaneously must all enable reuse port on the socket
  * bound to that port.
  **/
-- (BOOL)enableReusePort:(BOOL)flag error:(NSError **)errPtr;
+- (BOOL)enableReusePort:(BOOL)flag error:(NSError *__autoreleasing*)errPtr;
 
 #pragma mark Broadcast
 
@@ -526,7 +527,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * The reason this is generally disabled by default (by the OS) is to prevent
  * accidental broadcast messages from flooding the network.
 **/
-- (BOOL)enableBroadcast:(BOOL)flag error:(NSError **)errPtr;
+- (BOOL)enableBroadcast:(BOOL)flag error:(NSError *__autoreleasing*)errPtr;
 
 #pragma mark Sending
 
@@ -734,7 +735,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * You forgot to first bind the socket to a port number, and received a error with a message like:
  * "Must bind socket before you can receive data."
 **/
-- (BOOL)receiveOnce:(NSError **)errPtr;
+- (BOOL)receiveOnce:(NSError *__autoreleasing*)errPtr;
 
 /**
  * There are two modes of operation for receiving packets: one-at-a-time & continuous.
@@ -760,7 +761,7 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
  * You forgot to first bind the socket to a port number, and received a error with a message like:
  * "Must bind socket before you can receive data."
 **/
-- (BOOL)beginReceiving:(NSError **)errPtr;
+- (BOOL)beginReceiving:(NSError *__autoreleasing*)errPtr;
 
 /**
  * If the socket is currently receiving (beginReceiving has been called), this method pauses the receiving.
@@ -1033,13 +1034,13 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
 + (BOOL)isIPv4Address:(NSData *)address;
 + (BOOL)isIPv6Address:(NSData *)address;
 
-+ (BOOL)getHost:(NSString * __nullable * __nullable)hostPtr port:(uint16_t * __nullable)portPtr fromAddress:(NSData *)address;
-+ (BOOL)getHost:(NSString * __nullable * __nullable)hostPtr port:(uint16_t * __nullable)portPtr family:(int * __nullable)afPtr fromAddress:(NSData *)address;
++ (BOOL)getHost:(NSString * __nullable __autoreleasing * __nullable)hostPtr port:(uint16_t * __nullable)portPtr fromAddress:(NSData *)address;
++ (BOOL)getHost:(NSString * __nullable __autoreleasing * __nullable)hostPtr port:(uint16_t * __nullable)portPtr family:(int * __nullable)afPtr fromAddress:(NSData *)address;
 
 + (void)convertInterfaceDescription:(NSString *)interfaceDescription
                                port:(uint16_t)port
-                       intoAddress4:(NSData **)interfaceAddr4Ptr
-                           address6:(NSData **)interfaceAddr6Ptr;
+					   intoAddress4:(NSData *__nonnull*__nonnull)interfaceAddr4Ptr
+                           address6:(NSData *__nonnull*__nonnull)interfaceAddr6Ptr;
 
 @end
 

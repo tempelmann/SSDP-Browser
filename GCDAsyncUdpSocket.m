@@ -222,8 +222,8 @@ enum GCDAsyncUdpSocketConfig
 - (void)closeSockets;
 
 - (void)maybeConnect;
-- (BOOL)connectWithAddress4:(NSData *)address4 error:(NSError **)errPtr;
-- (BOOL)connectWithAddress6:(NSData *)address6 error:(NSError **)errPtr;
+- (BOOL)connectWithAddress4:(NSData *)address4 error:(NSError *__autoreleasing*)errPtr;
+- (BOOL)connectWithAddress6:(NSData *)address6 error:(NSError *__autoreleasing*)errPtr;
 
 - (void)maybeDequeueSend;
 - (void)doPreSend;
@@ -236,13 +236,13 @@ enum GCDAsyncUdpSocketConfig
 
 - (void)closeWithError:(NSError *)error;
 
-- (BOOL)performMulticastRequest:(int)requestType forGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError **)errPtr;
+- (BOOL)performMulticastRequest:(int)requestType forGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError *__autoreleasing*)errPtr;
 
 #if TARGET_OS_IPHONE || STREAM_ON_MACOS
-- (BOOL)createReadAndWriteStreams:(NSError **)errPtr;
-- (BOOL)registerForStreamCallbacks:(NSError **)errPtr;
-- (BOOL)addStreamsToRunLoop:(NSError **)errPtr;
-- (BOOL)openStreams:(NSError **)errPtr;
+- (BOOL)createReadAndWriteStreams:(NSError *__autoreleasing*)errPtr;
+- (BOOL)registerForStreamCallbacks:(NSError *__autoreleasing*)errPtr;
+- (BOOL)addStreamsToRunLoop:(NSError *__autoreleasing*)errPtr;
+- (BOOL)openStreams:(NSError *__autoreleasing*)errPtr;
 - (void)removeStreamsFromRunLoop;
 - (void)closeReadAndWriteStreams;
 #endif
@@ -578,7 +578,7 @@ enum GCDAsyncUdpSocketConfig
 	[self setDelegateQueue:newDelegateQueue synchronously:YES];
 }
 
-- (void)getDelegate:(id<GCDAsyncUdpSocketDelegate> *)delegatePtr delegateQueue:(dispatch_queue_t *)delegateQueuePtr
+- (void)getDelegate:(id<GCDAsyncUdpSocketDelegate> _Nullable __autoreleasing * __nullable)delegatePtr delegateQueue:(dispatch_queue_t _Nullable __autoreleasing * __nullable)delegateQueuePtr
 {
 	if (dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey))
 	{
@@ -1122,7 +1122,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Utilities
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)preOp:(NSError **)errPtr
+- (BOOL)preOp:(NSError *__autoreleasing*)errPtr
 {
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	
@@ -1280,7 +1280,7 @@ enum GCDAsyncUdpSocketConfig
  * Returns the address family (AF_INET or AF_INET6) of the picked address,
  * or AF_UNSPEC and the corresponding error is there's a problem.
 **/
-- (int)getAddress:(NSData **)addressPtr error:(NSError **)errorPtr fromAddresses:(NSArray *)addresses
+- (int)getAddress:(NSData *__autoreleasing*)addressPtr error:(NSError *__autoreleasing*)errorPtr fromAddresses:(NSArray *)addresses
 {
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
 	NSAssert([addresses count] > 0, @"Expected at least one address");
@@ -1425,8 +1425,8 @@ enum GCDAsyncUdpSocketConfig
 **/
 + (void)convertInterfaceDescription:(NSString *)interfaceDescription
                               port:(uint16_t)port
-                      intoAddress4:(NSData **)interfaceAddr4Ptr
-                          address6:(NSData **)interfaceAddr6Ptr
+                      intoAddress4:(NSData *__autoreleasing*)interfaceAddr4Ptr
+                          address6:(NSData *__autoreleasing*)interfaceAddr6Ptr
 {
 	NSData *addr4 = nil;
 	NSData *addr6 = nil;
@@ -1574,8 +1574,8 @@ enum GCDAsyncUdpSocketConfig
 **/
 - (void)convertNumericHost:(NSString *)numericHost
                       port:(uint16_t)port
-              intoAddress4:(NSData **)addr4Ptr
-                  address6:(NSData **)addr6Ptr
+              intoAddress4:(NSData *__autoreleasing*)addr4Ptr
+                  address6:(NSData *__autoreleasing*)addr6Ptr
 {
 	NSData *addr4 = nil;
 	NSData *addr6 = nil;
@@ -2109,7 +2109,7 @@ enum GCDAsyncUdpSocketConfig
 	return YES;
 }
 
-- (BOOL)createSockets:(NSError **)errPtr
+- (BOOL)createSockets:(NSError *__autoreleasing*)errPtr
 {
 	LogTrace();
 	
@@ -2295,8 +2295,8 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Diagnostics
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)getLocalAddress:(NSData **)dataPtr
-                   host:(NSString **)hostPtr
+- (BOOL)getLocalAddress:(NSData *__autoreleasing*)dataPtr
+                   host:(NSString *__autoreleasing*)hostPtr
                    port:(uint16_t *)portPtr
               forSocket:(int)socketFD
              withFamily:(int)socketFamily
@@ -2776,7 +2776,7 @@ enum GCDAsyncUdpSocketConfig
  * This method runs through the various checks required prior to a bind attempt.
  * It is shared between the various bind methods.
 **/
-- (BOOL)preBind:(NSError **)errPtr
+- (BOOL)preBind:(NSError *__autoreleasing*)errPtr
 {
 	if (![self preOp:errPtr])
 	{
@@ -2819,12 +2819,12 @@ enum GCDAsyncUdpSocketConfig
 	return YES;
 }
 
-- (BOOL)bindToPort:(uint16_t)port error:(NSError **)errPtr
+- (BOOL)bindToPort:(uint16_t)port error:(NSError *__autoreleasing*)errPtr
 {
 	return [self bindToPort:port interface:nil error:errPtr];
 }
 
-- (BOOL)bindToPort:(uint16_t)port interface:(NSString *)interface error:(NSError **)errPtr
+- (BOOL)bindToPort:(uint16_t)port interface:(NSString *)interface error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -2944,7 +2944,7 @@ enum GCDAsyncUdpSocketConfig
 	return result;
 }
 
-- (BOOL)bindToAddress:(NSData *)localAddr error:(NSError **)errPtr
+- (BOOL)bindToAddress:(NSData *)localAddr error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -3077,7 +3077,7 @@ enum GCDAsyncUdpSocketConfig
  * This method runs through the various checks required prior to a connect attempt.
  * It is shared between the various connect methods.
 **/
-- (BOOL)preConnect:(NSError **)errPtr
+- (BOOL)preConnect:(NSError *__autoreleasing*)errPtr
 {
 	if (![self preOp:errPtr])
 	{
@@ -3110,7 +3110,7 @@ enum GCDAsyncUdpSocketConfig
 	return YES;
 }
 
-- (BOOL)connectToHost:(NSString *)host onPort:(uint16_t)port error:(NSError **)errPtr
+- (BOOL)connectToHost:(NSString *)host onPort:(uint16_t)port error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -3191,7 +3191,7 @@ enum GCDAsyncUdpSocketConfig
 	return result;
 }
 
-- (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr
+- (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -3323,7 +3323,7 @@ enum GCDAsyncUdpSocketConfig
 	}
 }
 
-- (BOOL)connectWithAddress4:(NSData *)address4 error:(NSError **)errPtr
+- (BOOL)connectWithAddress4:(NSData *)address4 error:(NSError *__autoreleasing*)errPtr
 {
 	LogTrace();
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
@@ -3343,7 +3343,7 @@ enum GCDAsyncUdpSocketConfig
 	return YES;
 }
 
-- (BOOL)connectWithAddress6:(NSData *)address6 error:(NSError **)errPtr
+- (BOOL)connectWithAddress6:(NSData *)address6 error:(NSError *__autoreleasing*)errPtr
 {
 	LogTrace();
 	NSAssert(dispatch_get_specific(IsOnSocketQueueOrTargetQueueKey), @"Must be dispatched on socketQueue");
@@ -3367,7 +3367,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Multicast
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)preJoin:(NSError **)errPtr
+- (BOOL)preJoin:(NSError *__autoreleasing*)errPtr
 {
 	if (![self preOp:errPtr])
 	{
@@ -3397,23 +3397,23 @@ enum GCDAsyncUdpSocketConfig
 	return YES;
 }
 
-- (BOOL)joinMulticastGroup:(NSString *)group error:(NSError **)errPtr
+- (BOOL)joinMulticastGroup:(NSString *)group error:(NSError *__autoreleasing*)errPtr
 {
 	return [self joinMulticastGroup:group onInterface:nil error:errPtr];
 }
 
-- (BOOL)joinMulticastGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError **)errPtr
+- (BOOL)joinMulticastGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError *__autoreleasing*)errPtr
 {
     // IP_ADD_MEMBERSHIP == IPV6_JOIN_GROUP
     return [self performMulticastRequest:IP_ADD_MEMBERSHIP forGroup:group onInterface:interface error:errPtr];
 }
 
-- (BOOL)leaveMulticastGroup:(NSString *)group error:(NSError **)errPtr
+- (BOOL)leaveMulticastGroup:(NSString *)group error:(NSError *__autoreleasing*)errPtr
 {
 	return [self leaveMulticastGroup:group onInterface:nil error:errPtr];
 }
 
-- (BOOL)leaveMulticastGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError **)errPtr
+- (BOOL)leaveMulticastGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError *__autoreleasing*)errPtr
 {
     // IP_DROP_MEMBERSHIP == IPV6_LEAVE_GROUP
     return [self performMulticastRequest:IP_DROP_MEMBERSHIP forGroup:group onInterface:interface error:errPtr];
@@ -3422,7 +3422,7 @@ enum GCDAsyncUdpSocketConfig
 - (BOOL)performMulticastRequest:(int)requestType
                        forGroup:(NSString *)group
                     onInterface:(NSString *)interface
-                          error:(NSError **)errPtr
+                          error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -3532,7 +3532,7 @@ enum GCDAsyncUdpSocketConfig
 	return result;
 }
 
-- (BOOL)sendIPv4MulticastOnInterface:(NSString*)interface error:(NSError **)errPtr
+- (BOOL)sendIPv4MulticastOnInterface:(NSString*)interface error:(NSError *__autoreleasing*)errPtr
 {
     __block BOOL result = NO;
     __block NSError *err = nil;
@@ -3590,7 +3590,7 @@ enum GCDAsyncUdpSocketConfig
     return result;
 }
 
-- (BOOL)sendIPv6MulticastOnInterface:(NSString*)interface error:(NSError **)errPtr
+- (BOOL)sendIPv6MulticastOnInterface:(NSString*)interface error:(NSError *__autoreleasing*)errPtr
 {
     __block BOOL result = NO;
     __block NSError *err = nil;
@@ -3651,7 +3651,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Reuse port
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)enableReusePort:(BOOL)flag error:(NSError **)errPtr
+- (BOOL)enableReusePort:(BOOL)flag error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -3715,7 +3715,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Broadcast
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)enableBroadcast:(BOOL)flag error:(NSError **)errPtr
+- (BOOL)enableBroadcast:(BOOL)flag error:(NSError *__autoreleasing*)errPtr
 {
 	__block BOOL result = NO;
 	__block NSError *err = nil;
@@ -4301,7 +4301,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark Receiving
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)receiveOnce:(NSError **)errPtr
+- (BOOL)receiveOnce:(NSError *__autoreleasing*)errPtr
 {
 	LogTrace();
 	
@@ -4347,7 +4347,7 @@ enum GCDAsyncUdpSocketConfig
 	return result;
 }
 
-- (BOOL)beginReceiving:(NSError **)errPtr
+- (BOOL)beginReceiving:(NSError *__autoreleasing*)errPtr
 {
 	LogTrace();
 	
@@ -5584,12 +5584,12 @@ Failed:
 	return (af == AF_INET6);
 }
 
-+ (BOOL)getHost:(NSString **)hostPtr port:(uint16_t *)portPtr fromAddress:(NSData *)address
++ (BOOL)getHost:(NSString * __nullable __autoreleasing * __nullable)hostPtr port:(uint16_t * __nullable)portPtr fromAddress:(NSData *)address
 {
 	return [self getHost:hostPtr port:portPtr family:NULL fromAddress:address];
 }
 
-+ (BOOL)getHost:(NSString **)hostPtr port:(uint16_t *)portPtr family:(int *)afPtr fromAddress:(NSData *)address
++ (BOOL)getHost:(NSString * __nullable __autoreleasing * __nullable)hostPtr port:(uint16_t *)portPtr family:(int * __nullable)afPtr fromAddress:(NSData *)address
 {
 	if ([address length] >= sizeof(struct sockaddr))
 	{

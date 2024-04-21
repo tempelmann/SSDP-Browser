@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	@property (nonatomic, weak) id<SSDPDiscoveryDelegate> delegate;
 
-	- (void) discoverServiceForDuration:(NSTimeInterval)duration /*10*/ searchTarget:(NSString*)searchTarget /*"ssdp:all"*/ port:(SInt32)port /*1900*/ onInterfaces:(NSArray<NSString*>*)onInterfaces;
+	- (void) discoverServiceForDuration:(NSTimeInterval)duration /*10*/ searchTarget:(NSString*)searchTarget /*"ssdp:all"*/ port:(UInt16)port /*1900*/ onInterfaces:(NSArray<NSString*>*)onInterfaces;
 	- (void) stop;
 
 @end
