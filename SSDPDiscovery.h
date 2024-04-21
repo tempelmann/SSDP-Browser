@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 	@optional
 	- (void) ssdpDiscoveryDidStart:(SSDPDiscovery*)discovery;
-	- (void) ssdpDiscovery:(SSDPDiscovery*)discovery didFinishWithError:(NSError*__autoreleasing*)error;
+	- (void) ssdpDiscovery:(SSDPDiscovery*)discovery didFinishWithError:(NSError*)error;
 	- (void) ssdpDiscoveryDidFinish:(SSDPDiscovery*)discovery;	// without error
 
 @end

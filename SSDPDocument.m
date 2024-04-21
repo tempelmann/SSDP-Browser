@@ -7,7 +7,12 @@
 
 #import "SSDPDocument.h"
 #import "TreeNode.h"
-#import "SSDP_Browser-Swift.h"
+
+#if 1
+	#import "SSDPBrowser.h"
+#else
+	#import "SSDP_Browser-Swift.h"
+#endif
 
 @interface SSDPDocument () <DiscoveryDelegate, NSWindowDelegate, NSSearchFieldDelegate>
 	@property (weak) IBOutlet NSProgressIndicator *searchSpinner;
@@ -102,7 +107,7 @@
 	return nil;
 }
 
-- (void)discoveryDidFindWithUuid:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data
+- (void)discoveryDidFindUUID:(NSString * _Nonnull)uuid name:(NSString * _Nonnull)name data:(NSDictionary * _Nonnull)data
 {
 	// 	NSLog(@"add %@", uuid);
 

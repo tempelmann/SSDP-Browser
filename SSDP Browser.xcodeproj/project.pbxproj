@@ -10,20 +10,14 @@
 		A464C1662BD4385900261F1E /* SSDPService.m in Sources */ = {isa = PBXBuildFile; fileRef = A464C1652BD4385900261F1E /* SSDPService.m */; };
 		A4F6CBEB2BD4547300CA385E /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F6CBE92BD4547300CA385E /* GCDAsyncUdpSocket.m */; };
 		A4F6CBF92BD466EF00CA385E /* SSDPDiscovery.m in Sources */ = {isa = PBXBuildFile; fileRef = A464C1682BD4386A00261F1E /* SSDPDiscovery.m */; };
-		A4F6CBFA2BD471D200CA385E /* SSDPDiscoverySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB42B7D44F9003F8770 /* SSDPDiscoverySwift.swift */; };
-		A4F6CBFB2BD471D200CA385E /* SSDPServiceSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FB52B7D44F9003F8770 /* SSDPServiceSwift.swift */; };
-		A4F6CBFC2BD471D200CA385E /* Socket+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA32B7D44B5003F8770 /* Socket+Equatable.swift */; };
-		A4F6CBFD2BD471D200CA385E /* Socket+Hashable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA42B7D44B5003F8770 /* Socket+Hashable.swift */; };
-		A4F6CBFE2BD471D200CA385E /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA62B7D44B5003F8770 /* Socket.swift */; };
-		A4F6CBFF2BD471D200CA385E /* SocketProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */; };
-		A4F6CC002BD471D200CA385E /* SocketUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4051FA82B7D44B5003F8770 /* SocketUtils.swift */; };
+		A4F6CC032BD4790000CA385E /* SSDPBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F6CC022BD4790000CA385E /* SSDPBrowser.m */; };
+		A4F6CC0C2BD5039A00CA385E /* XMLToDictBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A4F6CC0B2BD5039A00CA385E /* XMLToDictBuilder.m */; };
 		A4FEAA662B8E349F00FD51D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA652B8E349F00FD51D6 /* AppDelegate.m */; };
 		A4FEAA692B8E349F00FD51D6 /* SSDPDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA682B8E349F00FD51D6 /* SSDPDocument.m */; };
 		A4FEAA6C2B8E349F00FD51D6 /* SSDPDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4FEAA6A2B8E349F00FD51D6 /* SSDPDocument.xib */; };
 		A4FEAA6E2B8E34A000FD51D6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A4FEAA6D2B8E34A000FD51D6 /* Assets.xcassets */; };
 		A4FEAA712B8E34A000FD51D6 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A4FEAA6F2B8E34A000FD51D6 /* MainMenu.xib */; };
 		A4FEAA742B8E34A000FD51D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA732B8E34A000FD51D6 /* main.m */; };
-		A4FEAA8F2B8E8BA600FD51D6 /* SSDPBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */; };
 		A4FEAA962B8E90E300FD51D6 /* PredicateOutlineNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA952B8E90E300FD51D6 /* PredicateOutlineNode.m */; };
 		A4FEAA9F2B8E95F200FD51D6 /* TreeNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAA9E2B8E95F200FD51D6 /* TreeNode.m */; };
 		A4FEAAA82B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A4FEAAA72B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m */; };
@@ -33,22 +27,16 @@
 		A4051F9C2B7D43D3003F8770 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		A4051F9E2B7D43DF003F8770 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		A4051FA02B7D43E9003F8770 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
-		A4051FA32B7D44B5003F8770 /* Socket+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Socket+Equatable.swift"; sourceTree = "<group>"; };
-		A4051FA42B7D44B5003F8770 /* Socket+Hashable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Socket+Hashable.swift"; sourceTree = "<group>"; };
-		A4051FA52B7D44B5003F8770 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
-		A4051FA62B7D44B5003F8770 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
-		A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketProtocols.swift; sourceTree = "<group>"; };
-		A4051FA82B7D44B5003F8770 /* SocketUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtils.swift; sourceTree = "<group>"; };
-		A4051FB32B7D44F9003F8770 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		A4051FB42B7D44F9003F8770 /* SSDPDiscoverySwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDPDiscoverySwift.swift; sourceTree = "<group>"; usesTabs = 1; };
-		A4051FB52B7D44F9003F8770 /* SSDPServiceSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDPServiceSwift.swift; sourceTree = "<group>"; };
 		A464C1642BD4385900261F1E /* SSDPService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDPService.h; sourceTree = "<group>"; };
 		A464C1652BD4385900261F1E /* SSDPService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDPService.m; sourceTree = "<group>"; };
 		A464C1672BD4386A00261F1E /* SSDPDiscovery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDPDiscovery.h; sourceTree = "<group>"; };
 		A464C1682BD4386A00261F1E /* SSDPDiscovery.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDPDiscovery.m; sourceTree = "<group>"; };
-		A464C16A2BD43A4B00261F1E /* SSDP Browser-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SSDP Browser-Bridging-Header.h"; sourceTree = "<group>"; };
 		A4F6CBE92BD4547300CA385E /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
 		A4F6CBEA2BD4547300CA385E /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
+		A4F6CC012BD4790000CA385E /* SSDPBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SSDPBrowser.h; sourceTree = "<group>"; };
+		A4F6CC022BD4790000CA385E /* SSDPBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SSDPBrowser.m; sourceTree = "<group>"; };
+		A4F6CC0A2BD5039A00CA385E /* XMLToDictBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XMLToDictBuilder.h; sourceTree = "<group>"; };
+		A4F6CC0B2BD5039A00CA385E /* XMLToDictBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XMLToDictBuilder.m; sourceTree = "<group>"; };
 		A4FEAA622B8E349F00FD51D6 /* SSDP Browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SSDP Browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4FEAA642B8E349F00FD51D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A4FEAA652B8E349F00FD51D6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -60,7 +48,6 @@
 		A4FEAA722B8E34A000FD51D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4FEAA732B8E34A000FD51D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A4FEAA752B8E34A000FD51D6 /* SSDP_Browser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SSDP_Browser.entitlements; sourceTree = "<group>"; };
-		A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSDPBrowser.swift; sourceTree = "<group>"; };
 		A4FEAA942B8E90E300FD51D6 /* PredicateOutlineNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PredicateOutlineNode.h; sourceTree = "<group>"; };
 		A4FEAA952B8E90E300FD51D6 /* PredicateOutlineNode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PredicateOutlineNode.m; sourceTree = "<group>"; };
 		A4FEAA9D2B8E95F200FD51D6 /* TreeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TreeNode.h; sourceTree = "<group>"; };
@@ -85,7 +72,8 @@
 			children = (
 				A4FEAA642B8E349F00FD51D6 /* AppDelegate.h */,
 				A4FEAA652B8E349F00FD51D6 /* AppDelegate.m */,
-				A4FEAA8E2B8E8BA600FD51D6 /* SSDPBrowser.swift */,
+				A4F6CC012BD4790000CA385E /* SSDPBrowser.h */,
+				A4F6CC022BD4790000CA385E /* SSDPBrowser.m */,
 				A464C1672BD4386A00261F1E /* SSDPDiscovery.h */,
 				A464C1682BD4386A00261F1E /* SSDPDiscovery.m */,
 				A464C1642BD4385900261F1E /* SSDPService.h */,
@@ -93,6 +81,8 @@
 				A4FEAA672B8E349F00FD51D6 /* SSDPDocument.h */,
 				A4FEAA682B8E349F00FD51D6 /* SSDPDocument.m */,
 				A4FEAA6A2B8E349F00FD51D6 /* SSDPDocument.xib */,
+				A4F6CC0A2BD5039A00CA385E /* XMLToDictBuilder.h */,
+				A4F6CC0B2BD5039A00CA385E /* XMLToDictBuilder.m */,
 				A4F6CBEA2BD4547300CA385E /* GCDAsyncUdpSocket.h */,
 				A4F6CBE92BD4547300CA385E /* GCDAsyncUdpSocket.m */,
 				A4FEAA942B8E90E300FD51D6 /* PredicateOutlineNode.h */,
@@ -101,9 +91,6 @@
 				A4FEAA9E2B8E95F200FD51D6 /* TreeNode.m */,
 				A4FEAAA62B8EAB8B00FD51D6 /* HighlightingTextFieldCell.h */,
 				A4FEAAA72B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m */,
-				A464C16A2BD43A4B00261F1E /* SSDP Browser-Bridging-Header.h */,
-				A4051FB02B7D44F9003F8770 /* SSDPClient (3rd party) */,
-				A4051FA22B7D44B5003F8770 /* Socket (3rd party) */,
 				A4FEAA632B8E349F00FD51D6 /* Resources */,
 				A4051F872B7D40AD003F8770 /* Products */,
 				A4051F9B2B7D43D3003F8770 /* Frameworks */,
@@ -126,30 +113,6 @@
 				A4051F9C2B7D43D3003F8770 /* Network.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		A4051FA22B7D44B5003F8770 /* Socket (3rd party) */ = {
-			isa = PBXGroup;
-			children = (
-				A4051FA32B7D44B5003F8770 /* Socket+Equatable.swift */,
-				A4051FA42B7D44B5003F8770 /* Socket+Hashable.swift */,
-				A4051FA52B7D44B5003F8770 /* Socket.h */,
-				A4051FA62B7D44B5003F8770 /* Socket.swift */,
-				A4051FA72B7D44B5003F8770 /* SocketProtocols.swift */,
-				A4051FA82B7D44B5003F8770 /* SocketUtils.swift */,
-			);
-			name = "Socket (3rd party)";
-			path = "BlueSocket/Socket (3rd party)";
-			sourceTree = "<group>";
-		};
-		A4051FB02B7D44F9003F8770 /* SSDPClient (3rd party) */ = {
-			isa = PBXGroup;
-			children = (
-				A4051FB32B7D44F9003F8770 /* README.md */,
-				A4051FB42B7D44F9003F8770 /* SSDPDiscoverySwift.swift */,
-				A4051FB52B7D44F9003F8770 /* SSDPServiceSwift.swift */,
-			);
-			path = "SSDPClient (3rd party)";
 			sourceTree = "<group>";
 		};
 		A4FEAA632B8E349F00FD51D6 /* Resources */ = {
@@ -240,22 +203,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4F6CC002BD471D200CA385E /* SocketUtils.swift in Sources */,
-				A4FEAA8F2B8E8BA600FD51D6 /* SSDPBrowser.swift in Sources */,
+				A4F6CC032BD4790000CA385E /* SSDPBrowser.m in Sources */,
 				A4F6CBF92BD466EF00CA385E /* SSDPDiscovery.m in Sources */,
-				A4F6CBFE2BD471D200CA385E /* Socket.swift in Sources */,
 				A4FEAAA82B8EAB8B00FD51D6 /* HighlightingTextFieldCell.m in Sources */,
 				A464C1662BD4385900261F1E /* SSDPService.m in Sources */,
-				A4F6CBFC2BD471D200CA385E /* Socket+Equatable.swift in Sources */,
 				A4FEAA742B8E34A000FD51D6 /* main.m in Sources */,
-				A4F6CBFD2BD471D200CA385E /* Socket+Hashable.swift in Sources */,
-				A4F6CBFB2BD471D200CA385E /* SSDPServiceSwift.swift in Sources */,
 				A4FEAA962B8E90E300FD51D6 /* PredicateOutlineNode.m in Sources */,
 				A4F6CBEB2BD4547300CA385E /* GCDAsyncUdpSocket.m in Sources */,
+				A4F6CC0C2BD5039A00CA385E /* XMLToDictBuilder.m in Sources */,
 				A4FEAA662B8E349F00FD51D6 /* AppDelegate.m in Sources */,
 				A4FEAA9F2B8E95F200FD51D6 /* TreeNode.m in Sources */,
-				A4F6CBFA2BD471D200CA385E /* SSDPDiscoverySwift.swift in Sources */,
-				A4F6CBFF2BD471D200CA385E /* SocketProtocols.swift in Sources */,
 				A4FEAA692B8E349F00FD51D6 /* SSDPDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

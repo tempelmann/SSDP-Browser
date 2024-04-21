@@ -204,7 +204,7 @@ enum GCDAsyncUdpSocketConfig
 
 	void *IsOnSocketQueueOrTargetQueueKey;    
 	
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 	CFStreamClientContext streamContext;
 	CFReadStreamRef readStream4;
 	CFReadStreamRef readStream6;
@@ -238,7 +238,7 @@ enum GCDAsyncUdpSocketConfig
 
 - (BOOL)performMulticastRequest:(int)requestType forGroup:(NSString *)group onInterface:(NSString *)interface error:(NSError **)errPtr;
 
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 - (BOOL)createReadAndWriteStreams:(NSError **)errPtr;
 - (BOOL)registerForStreamCallbacks:(NSError **)errPtr;
 - (BOOL)addStreamsToRunLoop:(NSError **)errPtr;
@@ -252,7 +252,7 @@ enum GCDAsyncUdpSocketConfig
 + (uint16_t)portFromSockaddr4:(const struct sockaddr_in *)pSockaddr4;
 + (uint16_t)portFromSockaddr6:(const struct sockaddr_in6 *)pSockaddr6;
 
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 // Forward declaration
 + (void)listenerThread:(id)unused;
 #endif
@@ -4794,7 +4794,7 @@ enum GCDAsyncUdpSocketConfig
 	BOOL shouldCallDelegate = (flags & kDidCreateSockets) ? YES : NO;
 	
 	// Close all sockets, send/receive sources, cfstreams, etc
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 	[self removeStreamsFromRunLoop];
 	[self closeReadAndWriteStreams];
 #endif
@@ -4848,7 +4848,7 @@ enum GCDAsyncUdpSocketConfig
 #pragma mark CFStream
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 
 static NSThread *listenerThread;
 
@@ -5397,7 +5397,7 @@ Failed:
 	return socket6FD;
 }
 
-#if TARGET_OS_IPHONE || 1
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 
 - (CFReadStreamRef)readStream
 {

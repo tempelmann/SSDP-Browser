@@ -16,6 +16,8 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 
 @interface SSDPDiscovery() <GCDAsyncUdpSocketDelegate>
 	@property NSMutableArray<GCDAsyncUdpSocket*> *sockets;
+	@property NSError *lastError;
+	@property BOOL stopped;
 	- (BOOL) isDiscovering;
 @end
 
@@ -45,7 +47,20 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 			// no need to report "not reachable"
 		} else {
 			NSLog(@"Socket error: %@", error);
+			self.lastError = error;
 		}
+	}
+	[self checkFinish];
+}
+
+- (void) checkFinish {
+	if (!self.isDiscovering) {
+		if (self.lastError && [self.delegate respondsToSelector:@selector(ssdpDiscovery:didFinishWithError:)]) {
+			[self.delegate ssdpDiscovery:self didFinishWithError:self.lastError];
+		} else if ([self.delegate respondsToSelector:@selector(ssdpDiscoveryDidFinish:)]) {
+			[self.delegate ssdpDiscoveryDidFinish:self];
+		}
+		self.delegate = nil;
 	}
 }
 
@@ -64,17 +79,15 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	return self.sockets.count > 0;
 }
 
-- (void) forceStop{
-	while (self.isDiscovering) {
-		GCDAsyncUdpSocket *socket = self.sockets.lastObject;
-		[self.sockets removeLastObject];
-		[socket close];
-	}
-}
-
-
 - (void) discoverServiceForDuration:(NSTimeInterval)duration searchTarget:(NSString*)searchTarget port:(SInt32)port onInterfaces:(NSArray<NSString*>*)onInterfaces
 {
+	id tmpDelegate = self.delegate;
+	self.delegate = nil;
+	[self forceStop];
+	self.lastError = nil;
+	self.stopped = NO;
+	self.delegate = tmpDelegate;
+	
 	if ([self.delegate respondsToSelector:@selector(ssdpDiscoveryDidStart:)]) {
 		[self.delegate ssdpDiscoveryDidStart:self];
 	}
@@ -131,6 +144,7 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 		} @catch (NSException *exception) {
 			[socket close];
 			NSLog (@"Socket error: %@ on interface %@", error, interface.length > 0 ? interface : @"localhost");
+			self.lastError = error;
 		}
 
 	}
@@ -146,12 +160,18 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	}
 }
 
+- (void) forceStop {
+	self.stopped = YES;
+	while (self.isDiscovering) {
+		GCDAsyncUdpSocket *socket = self.sockets.lastObject;
+		[self.sockets removeLastObject];
+		[socket close];
+	}
+}
+
 - (void) stop {
 	if (self.isDiscovering) {
 		[self forceStop];
-		if ([self.delegate respondsToSelector:@selector(ssdpDiscoveryDidFinish:)]) {
-			[self.delegate ssdpDiscoveryDidFinish:self];
-		}
 	}
 }
 

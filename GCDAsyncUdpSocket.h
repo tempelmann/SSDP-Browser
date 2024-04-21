@@ -977,7 +977,10 @@ typedef BOOL (^GCDAsyncUdpSocketSendFilterBlock)(NSData *data, NSData *address, 
 - (int)socket4FD;
 - (int)socket6FD;
 
-#if TARGET_OS_IPHONE
+
+#define STREAM_ON_MACOS 0 // 1 compiles as well (not tested, though)
+
+#if TARGET_OS_IPHONE || STREAM_ON_MACOS
 
 /**
  * These methods are only available from within the context of a performBlock: invocation.
