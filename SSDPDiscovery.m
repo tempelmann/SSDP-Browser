@@ -79,7 +79,7 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	return self.sockets.count > 0;
 }
 
-- (void) discoverServiceForDuration:(NSTimeInterval)duration searchTarget:(NSString*)searchTarget port:(UInt16)port onInterfaces:(NSArray<NSString*>*)onInterfaces
+- (void) discoverServiceForDuration:(NSTimeInterval)duration searchTarget:(NSString*)searchTarget port:(UInt16)port onInterfaces:(NSArray<NSString*>*)onInterfaces specificAddress:(NSString*)specificAddress
 {
 	id tmpDelegate = self.delegate;
 	self.delegate = nil;
@@ -93,66 +93,86 @@ static NSExceptionName SSDPDiscoveryException = @"SSDPDiscoveryException";	// us
 	}
 
 	dispatch_queue_t queue = dispatch_get_main_queue();
-
-	for (__strong NSString *interface in onInterfaces) {
-		if (interface.length == 0) {
-			interface = nil;
-		}
-		// Determine the multicast address based on the interface's address type (ipv4 vs ipv6)
-		BOOL useIP4;
-		NSString *multicastAddr;
-		NSData *interface4 = nil;
-		NSData *interface6 = nil;
-		[GCDAsyncUdpSocket convertInterfaceDescription:interface port:port intoAddress4:&interface4 address6:&interface6];
-		if (interface4) {
-			multicastAddr = @"239.255.255.250";
-			useIP4 = YES;
-		} else if (interface6) {
-			multicastAddr = @"ff02::c";	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
-			useIP4 = NO;
-		} else {
-			continue;
-		}
-		// Set up the UDP socket
-		NSError *error = nil;
+	
+	if (specificAddress) {
+		// if specificAddress is given, we only query that one address, without using a multicast
 		GCDAsyncUdpSocket *socket = [GCDAsyncUdpSocket.alloc initWithDelegate:self delegateQueue:queue];
-		socket.userTag = interface;
-		@try {
-			[socket enableReusePort:YES error:&error];
-			if (error) {
-				[NSException raise:SSDPDiscoveryException format:@"enableReusePort failed; %@", error];
-			}
-			[socket setIPv4Enabled:useIP4];
-			[socket setIPv6Enabled:!useIP4];
-			NSString *interfaceForBind = [interface componentsSeparatedByString:@"%"].lastObject;
-			if (interfaceForBind.length == 0) {
-				interfaceForBind = nil;
-			}
-			[socket bindToPort:0 interface:interfaceForBind error:&error];
-			if (error) {
-				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
-			}
-			if (useIP4) {
-				// Apparently needed when using a VPN that routes all traffic thru the tunnel
-				[socket sendIPv4MulticastOnInterface:interfaceForBind error:nil];
-			} else {
-				[socket sendIPv6MulticastOnInterface:interfaceForBind error:nil];
-			}
+		socket.userTag = specificAddress;
+		NSError *error = nil;
+		[socket bindToPort:0 error:&error];
+		if (error) {
+			self.lastError = error;
+		} else {
 			[socket beginReceiving:&error];
 			if (error) {
-				[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
+				self.lastError = error;
+			} else {
+				NSString *message = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nHOST: %@:%d\r\nST: %@\r\nMX: %d\r\n\r\n";
+				message = [NSString stringWithFormat:message, specificAddress, (int)port, searchTarget, (int)duration];
+				[socket sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toHost:specificAddress port:port withTimeout:-1 tag:0];
+				[self.sockets addObject:socket];
 			}
-			NSString *message = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nHOST: %@:%d\r\nST: %@\r\nMX: %d\r\n\r\n";
-			message = [NSString stringWithFormat:message, multicastAddr, (int)port, searchTarget, (int)duration];
-			[socket sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toHost:multicastAddr port:port withTimeout:-1 tag:0];
-			[self.sockets addObject:socket];
-
-		} @catch (NSException *exception) {
-			[socket close];
-			NSLog (@"Socket error: %@ on interface %@", error, interface.length > 0 ? interface : @"localhost");
-			self.lastError = error;
 		}
+	} else {
+		for (__strong NSString *interface in onInterfaces) {
+			if (interface.length == 0) {
+				interface = nil;
+			}
+			// Determine the multicast address based on the interface's address type (ipv4 vs ipv6)
+			BOOL useIP4;
+			NSString *multicastAddr;
+			NSData *interface4 = nil;
+			NSData *interface6 = nil;
+			[GCDAsyncUdpSocket convertInterfaceDescription:interface port:port intoAddress4:&interface4 address6:&interface6];
+			if (interface4) {
+				multicastAddr = @"239.255.255.250";
+				useIP4 = YES;
+			} else if (interface6) {
+				multicastAddr = @"ff02::c";	// use "ff02::c" for "link-local" or "ff05::c" for "site-local"
+				useIP4 = NO;
+			} else {
+				continue;
+			}
+			// Set up the UDP socket
+			NSError *error = nil;
+			GCDAsyncUdpSocket *socket = [GCDAsyncUdpSocket.alloc initWithDelegate:self delegateQueue:queue];
+			socket.userTag = interface;
+			@try {
+				[socket enableReusePort:YES error:&error];
+				if (error) {
+					[NSException raise:SSDPDiscoveryException format:@"enableReusePort failed; %@", error];
+				}
+				[socket setIPv4Enabled:useIP4];
+				[socket setIPv6Enabled:!useIP4];
+				NSString *interfaceForBind = [interface componentsSeparatedByString:@"%"].lastObject;
+				if (interfaceForBind.length == 0) {
+					interfaceForBind = nil;
+				}
+				[socket bindToPort:0 interface:interfaceForBind error:&error];
+				if (error) {
+					[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
+				}
+				if (useIP4) {
+					// Apparently needed when using a VPN that routes all traffic thru the tunnel
+					[socket sendIPv4MulticastOnInterface:interfaceForBind error:nil];
+				} else {
+					[socket sendIPv6MulticastOnInterface:interfaceForBind error:nil];
+				}
+				[socket beginReceiving:&error];
+				if (error) {
+					[NSException raise:SSDPDiscoveryException format:@"bindToPort failed; %@", error];
+				}
+				NSString *message = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nHOST: %@:%d\r\nST: %@\r\nMX: %d\r\n\r\n";
+				message = [NSString stringWithFormat:message, multicastAddr, (int)port, searchTarget, (int)duration];
+				[socket sendData:[message dataUsingEncoding:NSUTF8StringEncoding] toHost:multicastAddr port:port withTimeout:-1 tag:0];
+				[self.sockets addObject:socket];
 
+			} @catch (NSException *exception) {
+				[socket close];
+				NSLog (@"Socket error: %@ on interface %@", error, interface.length > 0 ? interface : @"localhost");
+				self.lastError = error;
+			}
+		}
 	}
 
 	if (self.isDiscovering) {    // Might we run into a race condition here?

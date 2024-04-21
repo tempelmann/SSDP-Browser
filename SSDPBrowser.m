@@ -44,7 +44,15 @@
 	self.titleByUUID = NSMutableDictionary.new;
 	self.client = SSDPDiscovery.new;
 	self.client.delegate = self;
-	[self.client discoverServiceForDuration:duration searchTarget:target port:1900 onInterfaces:interfaces];
+	[self.client discoverServiceForDuration:duration searchTarget:target port:1900 onInterfaces:interfaces specificAddress:nil];
+}
+
+- (void) query:(NSString*)target address:(NSString*)address delegate:(id<SSDPBrowserDelegate>)delegate {
+	const int duration = 5;
+	self.delegate = delegate;
+	self.client = SSDPDiscovery.new;
+	self.client.delegate = self;
+	[self.client discoverServiceForDuration:duration searchTarget:target port:1900 onInterfaces:@[] specificAddress:address];
 }
 
 - (void) stop {
@@ -56,7 +64,8 @@
 	if (uuid) {
 		if (self.titleByUUID[uuid] == nil) {
 			// Download the XML description in order to determine the service's name
-			NSURL *url = [NSURL URLWithString:service.location];
+			NSString *location = service.location;
+			NSURL *url = [NSURL URLWithString:location];
 			NSURLSessionTask *task = [NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
 				if (self.titleByUUID[uuid] == nil && data.length > 0) {
 					XMLToDictBuilder *xmlToDict = XMLToDictBuilder.new;

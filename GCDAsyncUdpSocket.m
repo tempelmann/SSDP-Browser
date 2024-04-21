@@ -1223,6 +1223,8 @@ enum GCDAsyncUdpSocketConfig
 			hints.ai_socktype = SOCK_DGRAM;
 			hints.ai_protocol = IPPROTO_UDP;
 			
+			// Note: Name resolution ("hostname.local") can take seconds here,
+			//   whereas the IPv4-only gethostbyname() returns practically immediately
 			int gai_error = getaddrinfo([host UTF8String], [portStr UTF8String], &hints, &res0);
 			
 			if (gai_error)

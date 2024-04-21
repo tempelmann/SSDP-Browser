@@ -33,7 +33,7 @@
 	}
 	return self;
 }
-	
+
 - (NSString*) description {
 	return [NSString stringWithFormat:@"loc: %@, server: %@, st: %@, usn: %@", self.location, self.server, self.searchTarget, self.uniqueServiceName];
 }

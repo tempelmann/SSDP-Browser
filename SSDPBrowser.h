@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 	- (void) discoverRootdevicesOnAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate;
 	- (void) discover:(NSString*)target onAllInterfacesWithDelegate:(id<SSDPBrowserDelegate>)delegate;
 	- (void) discover:(NSString*)target onInterfaces:(NSArray<NSString*>*)interfaces delegate:(id<SSDPBrowserDelegate>)delegate;
+	- (void) query:(NSString*)target address:(NSString*)address delegate:(id<SSDPBrowserDelegate>)delegate;
 	- (void) stop;
 	- (NSArray<NSString*>*) allInterfacesIncludeIPv6:(BOOL)includeIPv6;
 @end
