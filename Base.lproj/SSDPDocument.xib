@@ -99,6 +99,9 @@
                                             </connections>
                                         </tableColumn>
                                     </tableColumns>
+                                    <connections>
+                                        <outlet property="dataSource" destination="-2" id="feQ-9a-3pX"/>
+                                    </connections>
                                 </outlineView>
                             </subviews>
                         </clipView>

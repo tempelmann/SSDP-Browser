@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 	@property NSString * __nullable value;
 
 	- (id) objectRef;
+	
+	- (TreeNode*) childByName:(NSString*)name;
 
 @end
 

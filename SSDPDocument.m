@@ -14,7 +14,7 @@
 	#import "SSDP_Browser-Swift.h"
 #endif
 
-@interface SSDPDocument () <SSDPBrowserDelegate, NSWindowDelegate, NSSearchFieldDelegate>
+@interface SSDPDocument () <SSDPBrowserDelegate, NSSearchFieldDelegate, NSOutlineViewDataSource>
 	@property (weak) IBOutlet NSProgressIndicator *searchSpinner;
 	@property (weak) IBOutlet NSOutlineView *outlineView;
 	@property (strong) IBOutlet NSTreeController *treeController;
@@ -64,23 +64,54 @@
 	]];
 }
 
+#pragma mark - NSOutlineViewDataSource delegate
+
+- (id)outlineView:(NSOutlineView *)outlineView itemForPersistentObject:(NSString*)path {
+/* this doesn't work here because (a) we don't have the data loaded at this point yet, (b) returning TreeNode may be the wrong class - it may want NSTreeNode or something instead
+	// Find the item from the given path
+	TreeNode *node = self.model;
+	for (NSString *name in [path componentsSeparatedByString:@"/"]) {
+		// Find the child with the given name
+		node = [node childByName:name];
+	}
+	return node;
+*/	return nil;
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView persistentObjectForItem:(id)item {
+	// This is implemented mainly to avoid the log message "NSOutlineView data source (…) does not implement outlineView:persistentObjectForItem:"
+	// In order to make the expanded items persistent, we build a path from its and its parents' names
+	NSMutableArray<NSString*> *path = NSMutableArray.new;
+	do {
+		TreeNode *node = [item representedObject];
+		if (![node isKindOfClass:TreeNode.class]) {
+			break;
+		}
+		[path insertObject:node.name atIndex:0];
+		item = [item parentNode];
+	} while (item);
+	return [path componentsJoinedByString:@"/"];
+}
+
+#pragma mark - NSDocument overrides
+
 #define NSJSONWritingWithoutEscapingSlashes 8 // API_AVAILABLE(macos(10.15), ios(13.0), watchos(6.0), tvos(13.0)) = (1UL << 3),
 
 - (NSData *)dataOfType:(NSString *)typeName error:(NSError **)outError {
-/* TODO: TreeNodes need to support serialization
+/* TODO: TreeNodes need to support serialization in order to make this work
 	return [NSJSONSerialization dataWithJSONObject:self.model.children options:NSJSONWritingPrettyPrinted|NSJSONWritingWithoutEscapingSlashes error:outError];
 */	return nil;
 }
 
 - (BOOL)readFromData:(NSData *)data ofType:(NSString *)typeName error:(NSError **)outError {
-/* TODO: TreeNodes need to support serialization
+/* TODO: TreeNodes need to support serialization in order to make this work
 	[self clearFilter];
 	self.model.children = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:outError];
 	return YES;
 */	return NO;
 }
 
-#pragma mark - SSDP discovery handling
+#pragma mark - SSDP discovery handling (SSDPBrowserDelegate)
 
 - (IBAction)startDiscovery:(id)sender {
 	self.isSearching = YES;
@@ -167,7 +198,7 @@
 	self.searchSpinner.hidden = YES;
 }
 
-#pragma mark - results filtering
+#pragma mark - results filtering (NSSearchFieldDelegate)
 
 - (NSString*) currentFilter {
 	return self.searchField.stringValue;

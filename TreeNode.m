@@ -21,4 +21,13 @@
 	return self;
 }
 
+- (TreeNode*) childByName:(NSString*)name {
+	for (TreeNode *child in self.children) {
+		if ([child.name isEqualToString:name]) {
+			return child;
+		}
+	}
+	return nil;
+}
+
 @end
