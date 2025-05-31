@@ -8,6 +8,8 @@
 
 #import "HighlightingTextFieldCell.h"
 #import "SSDPDocument.h"
+#import "AppDelegate.h"
+#import "TreeNode.h"
 
 @implementation HighlightingTextFieldCell
 
@@ -20,6 +22,10 @@
 //
 - (void)setObjectValue:(id)objectValue {
 	if ([objectValue isKindOfClass:TreeNode.class]) {
+		//NSLog(@"%p", objectValue);
+		[self setEnabled:true];
+		[(NSTextField*)self.controlView setEnabled:true];
+		[(NSTextField*)self.controlView addGestureRecognizer:((AppDelegate*)[NSApplication sharedApplication].delegate).gesture];
 		// we want to replace the string with an attributed string if there's a search filter set
 		id docHandler = self.controlView.window.delegate;	// we blindly assume this is of the SSDPDocument type
 		objectValue = [(SSDPDocument*)docHandler highlightedObjectValue:self node:objectValue];

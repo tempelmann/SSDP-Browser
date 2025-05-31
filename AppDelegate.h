@@ -6,6 +6,9 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "TreeNode.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
+	@property NSClickGestureRecognizer *gesture;
+	@property TreeNode *node;
 @end
