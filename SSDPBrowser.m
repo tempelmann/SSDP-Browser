@@ -69,8 +69,16 @@
 			NSURLSessionTask *task = [NSURLSession.sharedSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
 				if (self.titleByUUID[uuid] == nil && data.length > 0) {
 					XMLToDictBuilder *xmlToDict = XMLToDictBuilder.new;
-					NSDictionary *dict = [xmlToDict parseData:data];
+					NSMutableDictionary *dict = [[xmlToDict parseData:data] mutableCopy];
 					NSString *friendlyName = dict[@"root"][@"device"][@"friendlyName"];
+					if (dict[@"root"][@"URLBase"] == nil) {
+						NSRange range = [service.location rangeOfString:@"\\b/\\b" options:NSRegularExpressionSearch];
+						if (range.location != NSNotFound) {
+							dict[@"root"][@"URLBase (inferred)"] = [service.location substringToIndex:range.location];
+						} else {
+							dict[@"root"][@"URLBase (inferred)"] = service.location;
+						}
+					}
 					self.titleByUUID[uuid] = friendlyName;
 					dispatch_async(dispatch_get_main_queue(), ^{
 						[self.delegate browser:self didFindUUID:uuid name:friendlyName data:dict];
