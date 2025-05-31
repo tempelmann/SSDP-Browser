@@ -74,9 +74,9 @@
 					if (dict[@"root"][@"URLBase"] == nil) {
 						NSRange range = [service.location rangeOfString:@"\\b/\\b" options:NSRegularExpressionSearch];
 						if (range.location != NSNotFound) {
-							dict[@"root"][@"URLBase"] = [service.location substringToIndex:range.location];
+							dict[@"root"][@"URLBase (inferred)"] = [service.location substringToIndex:range.location];
 						} else {
-							dict[@"root"][@"URLBase"] = service.location;
+							dict[@"root"][@"URLBase (inferred)"] = service.location;
 						}
 					}
 					self.titleByUUID[uuid] = friendlyName;
