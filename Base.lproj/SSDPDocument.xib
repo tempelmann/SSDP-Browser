@@ -100,6 +100,7 @@
                                         </tableColumn>
                                     </tableColumns>
                                     <connections>
+                                        <action trigger="doubleAction" selector="copy:" target="-2" id="8pO-TS-ti0"/>
                                         <outlet property="dataSource" destination="-2" id="feQ-9a-3pX"/>
                                     </connections>
                                 </outlineView>

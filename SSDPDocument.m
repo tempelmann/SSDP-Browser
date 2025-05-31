@@ -260,4 +260,24 @@
 	return value;
 }
 
+#pragma mark - Menu commands and other actions
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
+	if (menuItem.action == @selector(copy:)) {
+		// only enable Copy command if there's a selection
+		return self.treeController.selectedNodes.count > 0;
+	}
+	return [super validateMenuItem:menuItem];
+}
+
+- (IBAction)copy:(id)sender {
+	NSTreeNode *treeNode = self.treeController.selectedNodes.firstObject;
+	TreeNode *node = treeNode.representedObject;
+	if (node != nil && node.value) {
+		NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];
+		[pasteboard clearContents];
+		[pasteboard setString:node.value forType:NSPasteboardTypeString];
+	}
+}
+
 @end
