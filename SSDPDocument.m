@@ -7,7 +7,6 @@
 
 #import "SSDPDocument.h"
 #import "TreeNode.h"
-#import "AppDelegate.h"
 
 #if 1
 	#import "SSDPBrowser.h"
@@ -15,7 +14,7 @@
 	#import "SSDP_Browser-Swift.h"
 #endif
 
-@interface SSDPDocument () <SSDPBrowserDelegate, NSSearchFieldDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate>
+@interface SSDPDocument () <SSDPBrowserDelegate, NSSearchFieldDelegate, NSOutlineViewDataSource>
 	@property (weak) IBOutlet NSProgressIndicator *searchSpinner;
 	@property (weak) IBOutlet NSOutlineView *outlineView;
 	@property (strong) IBOutlet NSTreeController *treeController;
@@ -30,8 +29,8 @@
 @implementation SSDPDocument
 
 - (instancetype)init {
-	self = [super init];
-	if (self) {
+    self = [super init];
+    if (self) {
 		self.model = TreeNode.new;
 		self.browser = SSDPBrowser.new;
 		if (@available(macOS 10.13, *)) {
@@ -45,8 +44,8 @@
 				NSBackgroundColorAttributeName:[NSColor secondarySelectedControlColor]
 			};
 		}
-	}
-	return self;
+    }
+    return self;
 }
 
 + (BOOL)autosavesInPlace {
@@ -63,16 +62,6 @@
 		[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES],
 		[NSSortDescriptor sortDescriptorWithKey:@"value" ascending:YES]
 	]];
-	self.outlineView.delegate = self;
-}
-
-#pragma mark - NSOutlineViewDelegate
-
-- (void)outlineViewSelectionDidChange:(NSNotification *) notification {
-	id item = ((NSTreeNode*)[self.outlineView itemAtRow:self.outlineView.selectedRow]).representedObject;
-	if ([item isKindOfClass:TreeNode.class]) {
-		((AppDelegate*)[NSApplication sharedApplication].delegate).node = (TreeNode*)item;
-	}
 }
 
 #pragma mark - NSOutlineViewDataSource delegate
